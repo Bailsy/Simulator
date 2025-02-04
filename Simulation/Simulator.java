@@ -21,7 +21,7 @@ public class Simulator
     // The probability that a rabbit will be created in any given position.
     private static final double PARROTFISH_CREATION_PROBABILITY = 0.06;
     // The probability that a rabbit will be created in any given position.
-    private static final double WHITESHARK_CREATION_PROBABILITY = 0.01;
+    private static final double WHITESHARK_CREATION_PROBABILITY = 0.07;
     // The probability that a rabbit will be created in any given position.
     private static final double KILLERWHALE_CREATION_PROBABILITY = 0.008;
     // The probability that a rabbit will be created in any given position.

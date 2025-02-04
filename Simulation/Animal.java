@@ -90,4 +90,15 @@ public abstract class Animal
     protected boolean canBreedWith(Animal mate) {
         return mate != null && this.getClass().equals(mate.getClass()) && this.getIsMale() != mate.getIsMale();
     }
+    
+    public Animal findBreedingPartner(Field field) {
+        List<Location> adjacentFields = field.getAdjacentLocations(getLocation());
+        for (Location loc : adjacentFields) {
+            Animal animal = field.getAnimalAt(loc);
+            if (animal != null && canBreedWith(animal) && animal.isAlive()) {
+                return animal; // Return first valid breeding partner found
+            }
+        }
+        return null; // No valid partner found
+    }
 }

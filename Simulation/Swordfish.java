@@ -17,7 +17,7 @@ public class Swordfish extends Animal
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.21;
+    private static final double BREEDING_PROBABILITY = 0.45;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
     // The food value of a single Clownfish. In effect, this is the
@@ -29,7 +29,7 @@ public class Swordfish extends Animal
     private static final int PARROTFISH_FOOD_VALUE = 16;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
-    
+
     // Individual characteristics (instance fields).
 
     // The fox's age.
@@ -55,7 +55,7 @@ public class Swordfish extends Animal
         }
         foodLevel = rand.nextInt(PARROTFISH_FOOD_VALUE);
     }
-    
+
     /**
      * This is what the fox does most of the time: it hunts for
      * rabbits. In the process, it might breed, die of hunger,
@@ -69,9 +69,9 @@ public class Swordfish extends Animal
         incrementHunger();
         if(isAlive()) {
             List<Location> freeLocations =
-                    nextFieldState.getFreeAdjacentLocations(getLocation());
+                nextFieldState.getFreeAdjacentLocations(getLocation());
             if(! freeLocations.isEmpty()) {
-                giveBirth(nextFieldState, freeLocations);
+                giveBirth(nextFieldState);
             }
             // Move towards a source of food if found.
             Location nextLocation = findFood(currentField);
@@ -92,15 +92,14 @@ public class Swordfish extends Animal
     }
 
 
-
     @Override
     public String toString() {
         return "Swordfish{" +
-                "age=" + age +
-                ", alive=" + isAlive() +
-                ", location=" + getLocation() +
-                ", foodLevel=" + foodLevel +
-                '}';
+        "age=" + age +
+        ", alive=" + isAlive() +
+        ", location=" + getLocation() +
+        ", foodLevel=" + foodLevel +
+        '}';
     }
 
     /**
@@ -113,7 +112,7 @@ public class Swordfish extends Animal
             setDead();
         }
     }
-    
+
     /**
      * Make this fox more hungry. This could result in the fox's death.
      */
@@ -124,7 +123,7 @@ public class Swordfish extends Animal
             setDead();
         }
     }
-    
+
     /**
      * Look for rabbits adjacent to the current location.
      * Only the first live rabbit is eaten.
@@ -163,26 +162,20 @@ public class Swordfish extends Animal
         }
         return foodLocation;
     }
-    
-    /**
-     * Check whether this fox is to give birth at this step.
-     * New births will be made into free adjacent locations.
-     * @param freeLocations The locations that are free in the current field.
-     */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations)
-    {
-        // New foxes are born into adjacent locations.
-        // Get a list of adjacent free locations.
-        int births = breed();
-        if(births > 0) {
-            for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
+
+    public void giveBirth(Field nextFieldState) {
+        Animal partner = findBreedingPartner(nextFieldState);
+        if (partner != null) {
+            int births = breed();
+            List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
+            for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Swordfish young = new Swordfish(false, loc);
                 nextFieldState.placeAnimal(young, loc);
             }
         }
     }
-        
+
     /**
      * Generate a number representing the number of births,
      * if it can breed.

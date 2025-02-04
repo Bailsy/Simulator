@@ -17,7 +17,7 @@ public class WhiteShark extends Animal
     // The age to which a fox can live.
     private static final int MAX_AGE = 200;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.05;
+    private static final double BREEDING_PROBABILITY = 0.4;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single Clownfish. In effect, this is the
@@ -71,7 +71,7 @@ public class WhiteShark extends Animal
             List<Location> freeLocations =
                     nextFieldState.getFreeAdjacentLocations(getLocation());
             if(! freeLocations.isEmpty()) {
-                giveBirth(nextFieldState, freeLocations);
+                giveBirth(nextFieldState);
             }
             // Move towards a source of food if found.
             Location nextLocation = findFood(currentField);
@@ -164,28 +164,12 @@ public class WhiteShark extends Animal
         return foodLocation;
     }
     
-    /**
-     * Check whether this white shark is to give birth at this step.
-     * New births will be made into free adjacent locations.
-     * @param freeLocations The locations that are free in the current field.
-     */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations)
-    {
-        // New foxes are born into adjacent locations.
-        // Get a list of adjacent free locations.
-        // List<Location> adjacentFields = nextFieldState.getAdjacentLocations(getLocation());
-        // for(Location loc : adjacentFields) {
-            // Animal animal = nextFieldState.getAnimalAt(loc);
-            // if(animal instanceof  WhiteShark whiteShark) {
-                // if(canBreedWith(whiteShark) && animal.isAlive()){
-                    
-                // }
-            // }
-        // }
-        
-        int births = breed();
-        if(births > 0) {
-            for(int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
+    public void giveBirth(Field nextFieldState) {
+        Animal partner = findBreedingPartner(nextFieldState);
+        if (partner != null) {
+            int births = breed();
+            List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
+            for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 WhiteShark young = new WhiteShark(false, loc);
                 nextFieldState.placeAnimal(young, loc);

@@ -23,4 +23,6 @@ comment7.params=
 comment7.target=boolean\ getIsMale()
 comment8.params=mate
 comment8.target=boolean\ canBreedWith(Animal)
-numComments=9
+comment9.params=field
+comment9.target=Animal\ findBreedingPartner(Field)
+numComments=10

@@ -16,7 +16,7 @@ public class Parrotfish extends Animal
     // The age to which a rabbit can live.
     private static final int MAX_AGE = 40;
     // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0.18;
+    private static final double BREEDING_PROBABILITY = 0.37;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 5;
     // A shared random number generator to control breeding.
@@ -56,7 +56,7 @@ public class Parrotfish extends Animal
             List<Location> freeLocations = 
                 nextFieldState.getFreeAdjacentLocations(getLocation());
             if(!freeLocations.isEmpty()) {
-                giveBirth(nextFieldState, freeLocations);
+                giveBirth(nextFieldState);
             }
             // Try to move into a free location.
             if(! freeLocations.isEmpty()) {
@@ -92,17 +92,11 @@ public class Parrotfish extends Animal
         }
     }
     
-    /**
-     * Check whether or not this rabbit is to give birth at this step.
-     * New births will be made into free adjacent locations.
-     * @param freeLocations The locations that are free in the current field.
-     */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations)
-    {
-        // New rabbits are born into adjacent locations.
-        // Get a list of adjacent free locations.
-        int births = breed();
-        if(births > 0) {
+    public void giveBirth(Field nextFieldState) {
+        Animal partner = findBreedingPartner(nextFieldState);
+        if (partner != null) {
+            int births = breed();
+            List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Parrotfish young = new Parrotfish(false, loc);
