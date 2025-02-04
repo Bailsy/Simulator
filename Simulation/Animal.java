@@ -17,8 +17,6 @@ public abstract class Animal
     protected boolean isMale;
     // A Random for the animal's gender to be randomised.
     private Random random = new Random();
-    
-    private int num;
 
     /**
      * Constructor for objects of class Animal.
