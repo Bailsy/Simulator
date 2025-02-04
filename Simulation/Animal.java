@@ -7,6 +7,17 @@ import java.util.List;
  * @author David J. Barnes and Michael Kölling
  * @version 7.0
  */
+
+
+
+
+
+//IF You see this is works!!!
+// :)
+
+
+
+
 public abstract class Animal
 {
     // Whether the animal is alive or not.
