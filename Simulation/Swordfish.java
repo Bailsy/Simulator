@@ -13,20 +13,20 @@ public class Swordfish extends Animal
 {
     // Characteristics shared by all foxes (class variables).
     // The age at which a fox can start to breed.
-    private static final int BREEDING_AGE = 15;
+    private static final int BREEDING_AGE = 5;
     // The age to which a fox can live.
-    private static final int MAX_AGE = 150;
+    private static final int MAX_AGE = 120;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.45;
+    private static final double BREEDING_PROBABILITY = 0.25;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
     // The food value of a single Clownfish. In effect, this is the
     // number of steps a fox can go before it has to eat again.
-    private static final int CLOWNFISH_FOOD_VALUE = 7;
+    private static final int CLOWNFISH_FOOD_VALUE = 8;
     // The food value of a single Rabbitfish.
-    private static final int RABBITFISH_FOOD_VALUE = 12;
+    private static final int PARROTFISH_FOOD_VALUE = 13;
     // The food value of a single Parrotfish.
-    private static final int PARROTFISH_FOOD_VALUE = 16;
+    private static final int TURTLE_FOOD_VALUE = 16;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
@@ -53,7 +53,7 @@ public class Swordfish extends Animal
         else {
             age = 0;
         }
-        foodLevel = rand.nextInt(PARROTFISH_FOOD_VALUE);
+        foodLevel = rand.nextInt(TURTLE_FOOD_VALUE);
     }
 
     /**
@@ -152,10 +152,10 @@ public class Swordfish extends Animal
                     foodLocation = loc;
                 }
             }
-            else if(animal instanceof  Rabbitfish) {
+            else if(animal instanceof  Turtle) {
                 if(animal.isAlive()) {
                     animal.setDead();
-                    foodLevel = RABBITFISH_FOOD_VALUE;
+                    foodLevel = TURTLE_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }

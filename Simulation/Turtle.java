@@ -8,17 +8,17 @@ import java.util.Random;
  * @author David J. Barnes and Michael Kölling
  * @version 7.1
  */
-public class Rabbitfish extends Animal
+public class Turtle extends Animal
 {
     // Characteristics shared by all rabbits (class variables).
     // The age at which a rabbit can start to breed.
-    private static final int BREEDING_AGE = 10;
+    private static final int BREEDING_AGE = 5;
     // The age to which a rabbit can live.
-    private static final int MAX_AGE = 100;
+    private static final int MAX_AGE = 50;
     // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0.25;
+    private static final double BREEDING_PROBABILITY = 0.22;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final int MAX_LITTER_SIZE = 4;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
@@ -34,7 +34,7 @@ public class Rabbitfish extends Animal
      * @param randomAge If true, the rabbit will have a random age.
      * @param location The location within the field.
      */
-    public Rabbitfish(boolean randomAge, Location location)
+    public Turtle(boolean randomAge, Location location)
     {
         super(location);
         age = 0;
@@ -73,7 +73,7 @@ public class Rabbitfish extends Animal
 
     @Override
     public String toString() {
-        return "Rabbitfish{" +
+        return "Turtle{" +
                 "age=" + age +
                 ", alive=" + isAlive() +
                 ", location=" + getLocation() +
@@ -99,7 +99,7 @@ public class Rabbitfish extends Animal
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Rabbitfish young = new Rabbitfish(false, loc);
+                Turtle young = new Turtle(false, loc);
                 nextFieldState.placeAnimal(young, loc);
             }
         }

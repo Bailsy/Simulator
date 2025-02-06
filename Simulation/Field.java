@@ -118,11 +118,11 @@ public class Field
      */
     public void fieldStats()
     {
-        int numSwordFish = 0, numRabbitfish = 0, numParrotfish = 0, numWhiteSharks = 0, numKillerWhales = 0, numClownfish = 0;
+        int numSwordFish = 0, numTurtle = 0, numParrotfish = 0, numWhiteSharks = 0, numKillerWhales = 0, numClownfish = 0;
         for(Animal anAnimal : field.values()) {
-            if(anAnimal instanceof Rabbitfish) {
+            if(anAnimal instanceof Turtle) {
                 if(anAnimal.isAlive()) {
-                    numRabbitfish++;
+                    numTurtle++;
                 }
             }
             else if(anAnimal instanceof Swordfish) {
@@ -151,7 +151,7 @@ public class Field
                 }
             }
         }
-        System.out.println("Rabbitfish: " + numRabbitfish +
+        System.out.println("Rabbitfish: " + numTurtle +
                            " White shark: " + numWhiteSharks +
                            " Parrotfish: " + numParrotfish +
                            " Killer whale: " + numWhiteSharks +
@@ -173,7 +173,7 @@ public class Field
      */
     public boolean isViable()
     {
-        boolean rabbitfishFound = false;
+        boolean turtleFound = false;
         boolean swordfishFound = false;
         boolean parrotfishFound = false;
         boolean whiteSharkFound = false;
@@ -181,11 +181,11 @@ public class Field
         boolean killerWhaleFound = false;
         
         Iterator<Animal> it = animals.iterator();
-        while(it.hasNext() && ! (rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound)) {
+        while(it.hasNext() && ! (turtleFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound)) {
             Animal anAnimal = it.next();
-            if(anAnimal instanceof Rabbitfish) {
+            if(anAnimal instanceof Turtle) {
                 if(anAnimal.isAlive()) {
-                    rabbitfishFound = true;
+                    turtleFound = true;
                 }
             }
             else if(anAnimal instanceof Swordfish) {
@@ -214,7 +214,7 @@ public class Field
                 }
             }
         }
-        return rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound;
+        return turtleFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound;
     }
     
     /**
