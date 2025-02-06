@@ -47,7 +47,7 @@ public class SimulatorView extends JFrame
         setColor(WhiteShark.class, Color.gray);
         setColor(KillerWhale.class, Color.black);
         setColor(Rabbitfish.class, Color.yellow);
-        setColor(Algae.class, Color.white);
+        setColor(Algae.class, new Color(0, 126, 0));
 
         setTitle("Underwater Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);

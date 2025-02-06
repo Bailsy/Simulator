@@ -43,8 +43,11 @@ public class Field
     {
         assert location != null;
         Object other = field.get(location);
-        if(other != null) {
+        if(other != null && other instanceof Animal) {
             animals.remove(other);
+        }
+        else if(other != null && other instanceof Plant) {
+            plants.remove(other);
         }
         field.put(location, anAnimal);
         animals.add(anAnimal);
@@ -62,7 +65,10 @@ public class Field
     {
         assert location != null;
         Object other = field.get(location);
-        if(other != null) {
+        if(other != null && other instanceof Animal) {
+            animals.remove(other);
+        }
+        else if(other != null && other instanceof Plant) {
             plants.remove(other);
         }
         field.put(location, plant);

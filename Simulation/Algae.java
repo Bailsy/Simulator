@@ -13,13 +13,13 @@ public class Algae extends Plant
 {
     // Characteristics shared by all foxes (class variables).
     // The age at which a fox can start to breed.
-    private static final int BREEDING_AGE = 3;
+    private static final int BREEDING_AGE = 1;
     // The age to which a fox can live.
-    private static final int MAX_AGE = 200;
+    private static final int MAX_AGE = 2;
     // The likelihood of a fox breeding.
     private static final double BREEDING_PROBABILITY = 0.9;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 10;
+    private static final int MAX_LITTER_SIZE = 17;
 
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
@@ -59,11 +59,18 @@ public class Algae extends Plant
     {
         incrementAge();
         if(isAlive()) {
-            List<Location> freeLocations =
-                    nextFieldState.getFreeAdjacentLocations(getLocation());
-            if(! freeLocations.isEmpty()) {
+            List<Location> freeLocations = 
+                nextFieldState.getFreeAdjacentLocations(getLocation());
+            if(!freeLocations.isEmpty()) {
                 reproduce(nextFieldState);
             }
+            // Try to move into a free location.
+            if(! freeLocations.isEmpty()) {
+                Location nextLocation = freeLocations.get(0);
+                setLocation(nextLocation);
+                nextFieldState.placePlant(this, nextLocation);
+            }
+
         }
     }
 
@@ -85,7 +92,7 @@ public class Algae extends Plant
     {
         age++;
         if(age > MAX_AGE) {
-            //setDead();
+            setDead();
         }
     }
     

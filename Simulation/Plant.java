@@ -37,11 +37,11 @@ public abstract class Plant implements Organism
     /**
      * Indicate that the animal is no longer alive.
      */
-    // protected void setDead()
-    // {
-        // alive = false;
-        // location = null;
-    // }
+    protected void setDead()
+    {
+        alive = false;
+        location = null;
+    }
     
     /**
      * Return the plant's location.
