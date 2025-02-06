@@ -15,7 +15,7 @@ public class Counter
     // How many of this type exist in the simulation.
     private int count;
 
-    /**
+    /**x
      * Provide a name for one of the simulation types.
      * @param name  A name, e.g. "Fox".
      */

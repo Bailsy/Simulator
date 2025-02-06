@@ -18,7 +18,7 @@ import java.util.List;
 
 
 
-public abstract class Animal
+public abstract class Animal implements Organism
 {
     // Whether the animal is alive or not.
     private boolean alive;

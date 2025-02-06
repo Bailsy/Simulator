@@ -26,6 +26,8 @@ public class Simulator
     private static final double KILLERWHALE_CREATION_PROBABILITY = 0.008;
     // The probability that a rabbit will be created in any given position.
     private static final double CLOWNFISH_CREATION_PROBABILITY = 0.08;
+    // The probability that a algae will be created in any given position.
+    private static final double ALGAE_CREATION_PROBABILITY = 0.01;
     
 
     // The current state of the field.
@@ -102,6 +104,11 @@ public class Simulator
             anAnimal.act(field, nextFieldState);
         }
         
+        List<Plant> plants = field.getPlants();
+        for (Plant plant : plants) {
+            plant.act(field, nextFieldState);
+        }
+        
         // Replace the old state with the new one.
         field = nextFieldState;
 
@@ -157,6 +164,11 @@ public class Simulator
                     Location location = new Location(row, col);
                     Clownfish clownfish = new Clownfish(true, location);
                     field.placeAnimal(clownfish, location);
+                }
+                else if(rand.nextDouble() <= ALGAE_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Algae algae = new Algae(true, location);
+                    field.placePlant(algae, location);
                 }
                 // else leave the location empty.
             }

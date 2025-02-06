@@ -15,9 +15,11 @@ public class Field
     // The dimensions of the field.
     private final int depth, width;
     // Animals mapped by location.
-    private final Map<Location, Animal> field = new HashMap<>();
+    private final Map<Location, Organism> field = new HashMap<>();
     // The animals.
     private final List<Animal> animals = new ArrayList<>();
+    // The plants.
+    private final List<Plant> plants = new ArrayList<>();
 
     /**
      * Represent a field of the given dimensions.
@@ -48,6 +50,25 @@ public class Field
         animals.add(anAnimal);
     }
     
+    
+    /**
+     * Place a plant at the given location.
+     * If there is already an plant at the location it will
+     * be lost.
+     * @param plant The Plant to be placed.
+     * @param location Where to place the plant.
+     */
+    public void placePlant(Plant plant, Location location)
+    {
+        assert location != null;
+        Object other = field.get(location);
+        if(other != null) {
+            plants.remove(other);
+        }
+        field.put(location, plant);
+        plants.add(plant);
+    }
+    
     /**
      * Return the animal at the given location, if any.
      * @param location Where in the field.
@@ -55,7 +76,31 @@ public class Field
      */
     public Animal getAnimalAt(Location location)
     {
-        return field.get(location);
+        Organism organism = field.get(location);
+        
+        if(organism instanceof Animal){
+            return (Animal)organism;
+        }
+        else{
+            return null;
+        }
+    }
+    
+    /**
+     * Return the plant at the given location, if any.
+     * @param location Where in the field.
+     * @return The plant at the given location, or null if there is none.
+     */
+    public Plant getPlantAt(Location location)
+    {
+        Organism organism = field.get(location);
+        
+        if(organism instanceof Plant){
+            return (Plant)organism;
+        }
+        else{
+            return null;
+        }
     }
 
     /**
@@ -68,13 +113,24 @@ public class Field
         List<Location> free = new LinkedList<>();
         List<Location> adjacent = getAdjacentLocations(location);
         for(Location next : adjacent) {
-            Animal anAnimal = field.get(next);
+            Organism organism = field.get(next);
+            if(organism instanceof Animal){
+            Animal anAnimal = (Animal)organism;
             if(anAnimal == null) {
                 free.add(next);
             }
             else if(!anAnimal.isAlive()) {
                 free.add(next);
             }
+          }else{
+            Plant plant = (Plant)organism;
+            if(plant == null) {
+                free.add(next);
+            }
+            else if(!plant.isAlive()) {
+                free.add(next);
+            }
+          }
         }
         return free;
     }
@@ -118,8 +174,13 @@ public class Field
      */
     public void fieldStats()
     {
-        int numSwordFish = 0, numRabbitfish = 0, numParrotfish = 0, numWhiteSharks = 0, numKillerWhales = 0, numClownfish = 0;
-        for(Animal anAnimal : field.values()) {
+        int numSwordFish = 0, numRabbitfish = 0, numParrotfish = 0, numWhiteSharks = 0, numKillerWhales = 0, numClownfish = 0, numAlgae = 0;
+        for(Organism organism : field.values()) {
+            
+            if(organism instanceof Animal){
+                Animal anAnimal = (Animal)organism;
+            
+            
             if(anAnimal instanceof Rabbitfish) {
                 if(anAnimal.isAlive()) {
                     numRabbitfish++;
@@ -151,12 +212,24 @@ public class Field
                 }
             }
         }
+        else if(organism instanceof Plant){
+            Plant plant = (Plant)organism;
+            
+            if(plant instanceof Algae) {
+                if(plant.isAlive()) {
+                    numAlgae++;
+                }
+            }
+            
+        }
+        }
         System.out.println("Rabbitfish: " + numRabbitfish +
                            " White shark: " + numWhiteSharks +
                            " Parrotfish: " + numParrotfish +
                            " Killer whale: " + numWhiteSharks +
                            " Clownfish: " + numClownfish +
-                           " Swordfish: " + numSwordFish);
+                           " Swordfish: " + numSwordFish +
+                           " Algae: " + numAlgae);
     }
 
     /**
@@ -179,10 +252,11 @@ public class Field
         boolean whiteSharkFound = false;
         boolean clownfishFound = false;
         boolean killerWhaleFound = false;
+        boolean algaeFound = false;
         
-        Iterator<Animal> it = animals.iterator();
-        while(it.hasNext() && ! (rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound)) {
-            Animal anAnimal = it.next();
+        Iterator<Animal> itA = animals.iterator();
+        while(itA.hasNext() && ! (rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound)) {
+            Animal anAnimal = itA.next();
             if(anAnimal instanceof Rabbitfish) {
                 if(anAnimal.isAlive()) {
                     rabbitfishFound = true;
@@ -214,7 +288,17 @@ public class Field
                 }
             }
         }
-        return rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound;
+        
+        Iterator<Plant> itP = plants.iterator();
+        while(itP.hasNext() && ! (algaeFound)){
+            Plant plant = itP.next();
+            if(plant instanceof Algae) {
+                if(plant.isAlive()) {
+                    algaeFound = true;
+                }
+            }
+        }
+        return rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound && algaeFound;
     }
     
     /**
@@ -223,6 +307,14 @@ public class Field
     public List<Animal> getAnimals()
     {
         return animals;
+    }
+    
+    /**
+     * Get the list of plants.
+     */
+    public List<Plant> getPlants()
+    {
+        return plants;
     }
 
     /**
@@ -243,3 +335,4 @@ public class Field
         return width;
     }
 }
+

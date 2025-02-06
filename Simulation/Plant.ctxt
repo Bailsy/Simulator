@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=Plant
+comment1.params=location
+comment1.target=Plant(Location)
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ Plant.\n\ @param\ location\ The\ animal's\ location.\n
+comment2.params=currentField\ nextFieldState
+comment2.target=void\ act(Field,\ Field)
+comment2.text=\n\ Act.\n\ @param\ currentField\ The\ current\ state\ of\ the\ field.\n\ @param\ nextFieldState\ The\ new\ state\ being\ built.\n
+comment3.params=
+comment3.target=boolean\ isAlive()
+comment3.text=\n\ Check\ whether\ the\ plant\ is\ alive\ or\ not.\n\ @return\ true\ if\ the\ plant\ is\ still\ alive.\n
+comment4.params=
+comment4.target=Location\ getLocation()
+comment4.text=\n\ Return\ the\ plant's\ location.\n\ @return\ The\ plant's\ location.\n
+comment5.params=location
+comment5.target=void\ setLocation(Location)
+comment5.text=\n\ Set\ the\ plant's\ location.\n\ @param\ location\ The\ new\ location.\n
+numComments=6

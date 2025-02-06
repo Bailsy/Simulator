@@ -1,6 +1,6 @@
 import java.util.List;
 
-public abstract class Plant
+public abstract class Plant implements Organism
 {
     // Whether the animal is alive or not.
     private boolean alive;
@@ -37,11 +37,11 @@ public abstract class Plant
     /**
      * Indicate that the animal is no longer alive.
      */
-    protected void setDead()
-    {
-        alive = false;
-        location = null;
-    }
+    // protected void setDead()
+    // {
+        // alive = false;
+        // location = null;
+    // }
     
     /**
      * Return the plant's location.

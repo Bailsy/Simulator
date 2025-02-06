@@ -47,6 +47,7 @@ public class SimulatorView extends JFrame
         setColor(WhiteShark.class, Color.gray);
         setColor(KillerWhale.class, Color.black);
         setColor(Rabbitfish.class, Color.yellow);
+        setColor(Algae.class, Color.white);
 
         setTitle("Underwater Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
@@ -69,9 +70,9 @@ public class SimulatorView extends JFrame
      * @param animalClass The animal's Class object.
      * @param color The color to be used for the given class.
      */
-    public void setColor(Class<?> animalClass, Color color)
+    public void setColor(Class<?> organism, Color color)
     {
-        colors.put(animalClass, color);
+        colors.put(organism, color);
     }
 
     /**
@@ -108,13 +109,21 @@ public class SimulatorView extends JFrame
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
                 Object animal = field.getAnimalAt(new Location(row, col));
+                Object plant = field.getPlantAt(new Location(row, col));
+                
                 if(animal != null) {
                     stats.incrementCount(animal.getClass());
                     fieldView.drawMark(col, row, getColor(animal.getClass()));
                 }
+                else if(plant != null) {
+                    stats.incrementCount(plant.getClass());
+                    fieldView.drawMark(col, row, getColor(plant.getClass()));
+                }
                 else {
                     fieldView.drawMark(col, row, EMPTY_COLOR);
                 }
+                
+
             }
         }
         stats.countFinished();
