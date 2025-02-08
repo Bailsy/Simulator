@@ -15,11 +15,11 @@ public class Clownfish extends Animal
     // The age to which a rabbit can live.
     private static final int MAX_AGE = 80;
     // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0.20;
+    private static final double BREEDING_PROBABILITY = 0.4;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single Clownfish. In effect, this is the
-    private static final int ALGAE_FOOD_VALUE = 50;
+    private static final int ALGAE_FOOD_VALUE = 42;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
@@ -59,27 +59,32 @@ public class Clownfish extends Animal
     public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
-        incrementHunger();
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-            if(! freeLocations.isEmpty()) {
-                giveBirth(nextFieldState);
-            }
-            // Move towards a source of food if found.
-            Location nextLocation = findFood(currentField);
-            if(nextLocation == null && ! freeLocations.isEmpty()) {
-                // No food found - try to move to a free location.
-                nextLocation = freeLocations.remove(0);
-            }
-            // See if it was possible to move.
-            if(nextLocation != null) {
-                setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
+            if(Time.isDay()) {
+                incrementHunger();
+                if(! freeLocations.isEmpty()) {
+                    giveBirth(nextFieldState);
+                }
+                // Move towards a source of food if found.
+                Location nextLocation = findFood(currentField);
+                if(nextLocation == null && ! freeLocations.isEmpty()) {
+                    // No food found - try to move to a free location.
+                    nextLocation = freeLocations.remove(0);
+                }
+                // See if it was possible to move.
+                if(nextLocation != null) {
+                    setLocation(nextLocation);
+                    nextFieldState.placeAnimal(this, nextLocation);
+                }
+                else {
+                    // Overcrowding.
+                    setDead();
+                }
             }
             else {
-                // Overcrowding.
-                setDead();
+                nextFieldState.placeAnimal(this, getLocation());
             }
         }
     }

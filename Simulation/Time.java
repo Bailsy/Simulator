@@ -31,14 +31,14 @@ public class Time
     
     public void increment()
     {
-        minute = (minute + 10) % 60;
+        minute = (minute + 20) % 60;
         if(minute == 0) {
             hour = (hour + 1) % 24;
         }
     }
     
-    public static boolean isNight()
+    public static boolean isDay()
     {
-        return hour > DAY_TIME && hour < NIGHT_TIME;
+        return hour < DAY_TIME && hour > NIGHT_TIME;
     }
 }

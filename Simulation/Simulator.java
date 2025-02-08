@@ -18,7 +18,7 @@ public class Simulator
     private static final double SWORDFISH_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given position.
     
-    private static final double RABBITFISH_CREATION_PROBABILITY = 0.06;
+    private static final double TURTLE_CREATION_PROBABILITY = 0.06;
     private static final double PARROTFISH_CREATION_PROBABILITY = 0.08;
     private static final double CLOWNFISH_CREATION_PROBABILITY = 0.06;
     
@@ -98,6 +98,8 @@ public class Simulator
      */
     public void simulateOneStep()
     {
+        
+        time.increment();
         step++;
         // Use a separate Field to store the starting state of
         // the next step.
@@ -145,10 +147,10 @@ public class Simulator
                     Swordfish swordfish = new Swordfish(true, location);
                     field.placeAnimal(swordfish, location);
                 }
-                else if(rand.nextDouble() <= RABBITFISH_CREATION_PROBABILITY) {
+                else if(rand.nextDouble() <= TURTLE_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
-                    Rabbitfish rabbitfish = new Rabbitfish(true, location);
-                    field.placeAnimal(rabbitfish, location);
+                    Turtle turtle = new Turtle(true, location);
+                    field.placeAnimal(turtle, location);
                 }
                 else if(rand.nextDouble() <= PARROTFISH_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);

@@ -9,7 +9,7 @@ import java.util.Iterator;
  * @author David J. Barnes and Michael Kölling
  * @version 7.1
  */
-public class Rabbitfish extends Animal
+public class Turtle extends Animal
 {
     // Characteristics shared by all foxes (class variables).
     // The age at which a fox can start to breed.
@@ -17,11 +17,11 @@ public class Rabbitfish extends Animal
     // The age to which a rabbit can live.
     private static final int MAX_AGE = 100;
     // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0.24;
+    private static final double BREEDING_PROBABILITY = 0.54;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single Clownfish. In effect, this is the
-    private static final int ALGAE_FOOD_VALUE = 50;
+    private static final int ALGAE_FOOD_VALUE = 70;
     
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
@@ -40,7 +40,7 @@ public class Rabbitfish extends Animal
      * @param randomAge If true, the fox will have random age and hunger level.
      * @param location The location within the field.
      */
-    public Rabbitfish(boolean randomAge, Location location)
+    public Turtle(boolean randomAge, Location location)
     {
         super(location);
         if(randomAge) {
@@ -62,35 +62,39 @@ public class Rabbitfish extends Animal
     public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
-        incrementHunger();
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-            if(! freeLocations.isEmpty()) {
-                giveBirth(nextFieldState);
-            }
-            // Move towards a source of food if found.
-            Location nextLocation = findFood(currentField);
-            if(nextLocation == null && ! freeLocations.isEmpty()) {
-                // No food found - try to move to a free location.
-                nextLocation = freeLocations.remove(0);
-            }
-            // See if it was possible to move.
-            if(nextLocation != null) {
-                setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
+            if(Time.isDay()) {
+                incrementHunger();
+                if(! freeLocations.isEmpty()) {
+                    giveBirth(nextFieldState);
+                }
+                // Move towards a source of food if found.
+                Location nextLocation = findFood(currentField);
+                if(nextLocation == null && ! freeLocations.isEmpty()) {
+                    // No food found - try to move to a free location.
+                    nextLocation = freeLocations.remove(0);
+                }
+                // See if it was possible to move.
+                if(nextLocation != null) {
+                    setLocation(nextLocation);
+                    nextFieldState.placeAnimal(this, nextLocation);
+                }
+                else {
+                    // Overcrowding.
+                    setDead();
+                }
             }
             else {
-                // Overcrowding.
-                setDead();
+                nextFieldState.placeAnimal(this, getLocation());
             }
         }
     }
 
-
     @Override
     public String toString() {
-        return "RabbitFish{" +
+        return "Turtle{" +
         "age=" + age +
         ", alive=" + isAlive() +
         ", location=" + getLocation() +
@@ -154,7 +158,7 @@ public class Rabbitfish extends Animal
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Rabbitfish young = new Rabbitfish(false, loc);
+                Turtle young = new Turtle(false, loc);
                 nextFieldState.placeAnimal(young, loc);
             }
         }

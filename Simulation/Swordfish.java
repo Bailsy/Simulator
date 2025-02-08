@@ -19,12 +19,12 @@ public class Swordfish extends Animal
     // The likelihood of a fox breeding.
     private static final double BREEDING_PROBABILITY = 0.52;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 6;
+    private static final int MAX_LITTER_SIZE = 5;
     // The food value of a single Clownfish. In effect, this is the
     // number of steps a fox can go before it has to eat again.
     private static final int CLOWNFISH_FOOD_VALUE = 20;
     // The food value of a single Rabbitfish.
-    private static final int RABBITFISH_FOOD_VALUE = 20;
+    private static final int TURTLE_FOOD_VALUE = 20;
     // The food value of a single Parrotfish.
     private static final int PARROTFISH_FOOD_VALUE = 20;
     // The food value of a single Algae.
@@ -155,10 +155,10 @@ public class Swordfish extends Animal
                     foodLocation = loc;
                 }
             }
-            else if(animal instanceof  Rabbitfish) {
+            else if(animal instanceof  Turtle) {
                 if(animal.isAlive()) {
                     animal.setDead();
-                    foodLevel = RABBITFISH_FOOD_VALUE;
+                    foodLevel = TURTLE_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }

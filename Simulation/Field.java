@@ -180,16 +180,16 @@ public class Field
      */
     public void fieldStats()
     {
-        int numSwordFish = 0, numRabbitfish = 0, numParrotfish = 0, numWhiteSharks = 0, numKillerWhales = 0, numClownfish = 0, numAlgae = 0;
+        int numSwordFish = 0, numTurtle = 0, numParrotfish = 0, numWhiteSharks = 0, numKillerWhales = 0, numClownfish = 0, numAlgae = 0;
         for(Organism organism : field.values()) {
             
             if(organism instanceof Animal){
                 Animal anAnimal = (Animal)organism;
             
             
-            if(anAnimal instanceof Rabbitfish) {
+            if(anAnimal instanceof Turtle) {
                 if(anAnimal.isAlive()) {
-                    numRabbitfish++;
+                    numTurtle++;
                 }
             }
             else if(anAnimal instanceof Swordfish) {
@@ -229,7 +229,7 @@ public class Field
             
         }
         }
-        System.out.println("Rabbitfish: " + numRabbitfish +
+        System.out.println("Turtle: " + numTurtle +
                            " White shark: " + numWhiteSharks +
                            " Parrotfish: " + numParrotfish +
                            " Killer whale: " + numWhiteSharks +
@@ -263,7 +263,7 @@ public class Field
         Iterator<Animal> itA = animals.iterator();
         while(itA.hasNext() && ! (rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound)) {
             Animal anAnimal = itA.next();
-            if(anAnimal instanceof Rabbitfish) {
+            if(anAnimal instanceof Turtle) {
                 if(anAnimal.isAlive()) {
                     rabbitfishFound = true;
                 }

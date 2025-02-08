@@ -11,5 +11,5 @@ comment3.target=int\ getMinute()
 comment4.params=
 comment4.target=void\ increment()
 comment5.params=
-comment5.target=boolean\ isNight()
+comment5.target=boolean\ isDay()
 numComments=6

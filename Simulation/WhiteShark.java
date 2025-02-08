@@ -17,14 +17,14 @@ public class WhiteShark extends Animal
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.3;
+    private static final double BREEDING_PROBABILITY = 0.2;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single Clownfish. In effect, this is the
     // number of steps a fox can go before it has to eat again.
-    private static final int SWORDFISH_FOOD_VALUE = 35;
-    // The food value of a single Rabbitfish.
-    private static final int RABBITFISH_FOOD_VALUE = 25;
+    private static final int SWORDFISH_FOOD_VALUE = 60;
+    // The food value of a single Turtle.
+    private static final int TURTLE_FOOD_VALUE = 25;
     // The food value of a single Parrotfish.
     private static final int PARROTFISH_FOOD_VALUE = 20;
     // A shared random number generator to control breeding.
@@ -153,10 +153,10 @@ public class WhiteShark extends Animal
                     foodLocation = loc;
                 }
             }
-            else if(animal instanceof  Rabbitfish) {
+            else if(animal instanceof  Turtle) {
                 if(animal.isAlive()) {
                     animal.setDead();
-                    foodLevel = RABBITFISH_FOOD_VALUE;
+                    foodLevel = TURTLE_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }
