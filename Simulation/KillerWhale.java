@@ -17,7 +17,7 @@ public class KillerWhale extends Animal
     // The age to which a fox can live.
     private static final int MAX_AGE = 200;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.4;
+    private static final double BREEDING_PROBABILITY = 0.2;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
     // The food value of a single Clownfish. In effect, this is the
@@ -27,6 +27,8 @@ public class KillerWhale extends Animal
     private static final int RABBITFISH_FOOD_VALUE = 80;
     // The food value of a single Parrotfish.
     private static final int PARROTFISH_FOOD_VALUE = 20;
+    
+    private static final int SWORDFISH_FOOD_VALUE = 80;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
@@ -157,6 +159,13 @@ public class KillerWhale extends Animal
                 if(animal.isAlive()) {
                     animal.setDead();
                     foodLevel = CLOWNFISH_FOOD_VALUE;
+                    foodLocation = loc;
+                }
+            }
+            else if(animal instanceof Swordfish){
+                if(animal.isAlive()) {
+                    animal.setDead();
+                    foodLevel = SWORDFISH_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }

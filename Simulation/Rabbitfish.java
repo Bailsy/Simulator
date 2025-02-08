@@ -13,16 +13,16 @@ public class Rabbitfish extends Animal
 {
     // Characteristics shared by all foxes (class variables).
     // The age at which a fox can start to breed.
-    private static final int BREEDING_AGE = 2;
-    // The age to which a fox can live.
-    private static final int MAX_AGE = 5;
-    // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.73;
+     private static final int BREEDING_AGE = 5;
+    // The age to which a rabbit can live.
+    private static final int MAX_AGE = 100;
+    // The likelihood of a rabbit breeding.
+    private static final double BREEDING_PROBABILITY = 0.24;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 7;
+    private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single Clownfish. In effect, this is the
-    private static final int ALGAE_FOOD_VALUE = 10;
-    private static final int CLOWNFISH_FOOD_VALUE = 12;
+    private static final int ALGAE_FOOD_VALUE = 50;
+    
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
@@ -140,13 +140,6 @@ public class Rabbitfish extends Animal
                 if(plant.isAlive()){
                     plant.setDead();
                     foodLevel = ALGAE_FOOD_VALUE;
-                    foodLocation = loc;
-                }
-            }
-            if(animal instanceof  Clownfish) {
-                if(animal.isAlive()) {
-                    animal.setDead();
-                    foodLevel = CLOWNFISH_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }

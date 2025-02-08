@@ -17,16 +17,16 @@ public class Swordfish extends Animal
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.42;
+    private static final double BREEDING_PROBABILITY = 0.52;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 1;
+    private static final int MAX_LITTER_SIZE = 6;
     // The food value of a single Clownfish. In effect, this is the
     // number of steps a fox can go before it has to eat again.
-    private static final int CLOWNFISH_FOOD_VALUE = 10;
+    private static final int CLOWNFISH_FOOD_VALUE = 20;
     // The food value of a single Rabbitfish.
-    private static final int RABBITFISH_FOOD_VALUE = 12;
+    private static final int RABBITFISH_FOOD_VALUE = 20;
     // The food value of a single Parrotfish.
-    private static final int PARROTFISH_FOOD_VALUE = 11;
+    private static final int PARROTFISH_FOOD_VALUE = 20;
     // The food value of a single Algae.
     private static final int ALGAE_FOOD_VALUE = 2;
     // A shared random number generator to control breeding.

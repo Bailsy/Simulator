@@ -13,15 +13,15 @@ public class Parrotfish extends Animal
 {
     // Characteristics shared by all foxes (class variables).
     // The age at which a fox can start to breed.
-    private static final int BREEDING_AGE = 1;
-    // The age to which a fox can live.
-    private static final int MAX_AGE = 3;
-    // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.69;
+    private static final int BREEDING_AGE = 5;
+    // The age to which a rabbit can live.
+    private static final int MAX_AGE = 100;
+    // The likelihood of a rabbit breeding.
+    private static final double BREEDING_PROBABILITY = 0.25;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 6;
+    private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single Clownfish. In effect, this is the
-    private static final int ALGAE_FOOD_VALUE = 13;
+    private static final int ALGAE_FOOD_VALUE =50;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     // Individual characteristics (instance fields).

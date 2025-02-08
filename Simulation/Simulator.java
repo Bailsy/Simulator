@@ -15,17 +15,19 @@ public class Simulator
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
     // The probability that a fox will be created in any given grid position.
-    private static final double SWORDFISH_CREATION_PROBABILITY = 0.035;
+    private static final double SWORDFISH_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given position.
-    private static final double RABBITFISH_CREATION_PROBABILITY = 0.07;
+    
+    private static final double RABBITFISH_CREATION_PROBABILITY = 0.06;
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.08;
+    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.06;
+    
     // The probability that a rabbit will be created in any given position.
-    private static final double PARROTFISH_CREATION_PROBABILITY = 0.06;
-    // The probability that a rabbit will be created in any given position.
-    private static final double WHITESHARK_CREATION_PROBABILITY = 0.07;
+    private static final double WHITESHARK_CREATION_PROBABILITY = 0.03;
     // The probability that a rabbit will be created in any given position.
     private static final double KILLERWHALE_CREATION_PROBABILITY = 0.008;
     // The probability that a rabbit will be created in any given position.
-    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.08;
+    
     // The probability that a algae will be created in any given position.
     private static final double ALGAE_CREATION_PROBABILITY = 0.01;
     
@@ -36,6 +38,8 @@ public class Simulator
     private int step;
     // A graphical view of the simulation.
     private final SimulatorView view;
+    
+    private static Time time = new Time();
 
     /**
      * Construct a simulation field with default size.
@@ -59,7 +63,7 @@ public class Simulator
             width = DEFAULT_WIDTH;
         }
         
-        field = new Field(depth, width);
+        
         view = new SimulatorView(depth, width);
 
         reset();
@@ -121,6 +125,7 @@ public class Simulator
      */
     public void reset()
     {
+        field = new Field(DEFAULT_DEPTH, DEFAULT_WIDTH);
         step = 0;
         populate();
         view.showStatus(step, field);
