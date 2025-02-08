@@ -43,10 +43,10 @@ public class SimulatorView extends JFrame
         colors = new LinkedHashMap<>();
         setColor(Clownfish.class, Color.orange);
         setColor(Swordfish.class, Color.blue);
-        setColor(Parrotfish.class, Color.green);
+        setColor(Parrotfish.class, Color.yellow);
         setColor(WhiteShark.class, Color.gray);
         setColor(KillerWhale.class, Color.black);
-        setColor(Turtle.class, Color.yellow);
+        setColor(Turtle.class, Color.green);
 
         setTitle("Underwater Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);

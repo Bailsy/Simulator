@@ -60,9 +60,14 @@ public class Turtle extends Animal
             }
             // Try to move into a free location.
             if(! freeLocations.isEmpty()) {
-                Location nextLocation = freeLocations.get(0);
-                setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
+                if (!Time.isNight()) {
+                    Location nextLocation = freeLocations.get(0);
+                    setLocation(nextLocation);
+                    nextFieldState.placeAnimal(this, nextLocation);
+                }
+                else {
+                    
+                }
             }
             else {
                 // Overcrowding.

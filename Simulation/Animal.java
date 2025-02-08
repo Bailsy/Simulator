@@ -28,6 +28,8 @@ public abstract class Animal
     protected boolean isMale;
     // A Random for the animal's gender to be randomised.
     private Random random = new Random();
+    
+    private static Time time = new Time();
 
     /**
      * Constructor for objects of class Animal.
@@ -100,5 +102,10 @@ public abstract class Animal
             }
         }
         return null; // No valid partner found
+    }
+    
+    public static Time getTime()
+    {
+        return time;
     }
 }

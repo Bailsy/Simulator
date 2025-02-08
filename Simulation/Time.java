@@ -6,10 +6,10 @@
  */
 public class Time
 {
-    private static final int DAY_TIME_CYCLE = 18;
-    private static final int NIGHT_TIME_CYCLE = 6;
-    private int hour;
-    private int minute;
+    private static final int DAY_TIME = 20;
+    private static final int NIGHT_TIME = 6;
+    private static int hour;
+    private static int minute;
     /**
      * Constructor for objects of class Time
      */
@@ -31,11 +31,14 @@ public class Time
     
     public void increment()
     {
-        minute = (minute + 10) & 60;
-        if(minute == 0){
+        minute = (minute + 10) % 60;
+        if(minute == 0) {
             hour = (hour + 1) % 24;
         }
     }
     
-    
+    public static boolean isNight()
+    {
+        return hour > DAY_TIME && hour < NIGHT_TIME;
+    }
 }

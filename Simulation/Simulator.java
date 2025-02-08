@@ -34,6 +34,8 @@ public class Simulator
     private int step;
     // A graphical view of the simulation.
     private final SimulatorView view;
+    
+    private Time time = Animal.getTime();
 
     /**
      * Construct a simulation field with default size.
@@ -92,6 +94,7 @@ public class Simulator
      */
     public void simulateOneStep()
     {
+        time.increment();
         step++;
         // Use a separate Field to store the starting state of
         // the next step.
