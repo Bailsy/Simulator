@@ -13,13 +13,13 @@ public class Clownfish extends Animal
     // Characteristics shared by all foxes (class variables).
     private static final int BREEDING_AGE = 5;
     // The age to which a rabbit can live.
-    private static final int MAX_AGE = 80;
+    private static final int MAX_AGE = 40;
     // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0.4;
+    private static final double BREEDING_PROBABILITY = 0.6;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 2;
+    private static final int MAX_LITTER_SIZE = 3;
     // The food value of a single Clownfish. In effect, this is the
-    private static final int ALGAE_FOOD_VALUE = 42;
+    private static final int ALGAE_FOOD_VALUE = 30;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
@@ -62,8 +62,10 @@ public class Clownfish extends Animal
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
+                
             if(Time.isDay()) {
                 incrementHunger();
+                
                 if(! freeLocations.isEmpty()) {
                     giveBirth(nextFieldState);
                 }

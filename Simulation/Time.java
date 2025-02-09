@@ -7,7 +7,7 @@
 public class Time
 {
     private static final int DAY_TIME = 20;
-    private static final int NIGHT_TIME = 6;
+    private static final int NIGHT_TIME = 5;
     private static int hour;
     private static int minute;
     /**

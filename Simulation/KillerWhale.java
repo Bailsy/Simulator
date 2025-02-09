@@ -15,20 +15,20 @@ public class KillerWhale extends Animal
     // The age at which a fox can start to breed.
     private static final int BREEDING_AGE = 3;
     // The age to which a fox can live.
-    private static final int MAX_AGE = 200;
+    private static final int MAX_AGE = 500;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.35;
+    private static final double BREEDING_PROBABILITY = 0.44;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 4;
+    private static final int MAX_LITTER_SIZE = 5;
     // The food value of a single Clownfish. In effect, this is the
     // number of steps a fox can go before it has to eat again.
-    private static final int CLOWNFISH_FOOD_VALUE = 20;
+    private static final int CLOWNFISH_FOOD_VALUE = 180;
     // The food value of a single Rabbitfish.
-    private static final int RABBITFISH_FOOD_VALUE = 80;
+    private static final int TURTLE_FOOD_VALUE = 180;
     // The food value of a single Parrotfish.
-    private static final int PARROTFISH_FOOD_VALUE = 20;
+    private static final int PARROTFISH_FOOD_VALUE = 180;
     
-    private static final int SWORDFISH_FOOD_VALUE = 80;
+
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
@@ -151,7 +151,7 @@ public class KillerWhale extends Animal
             else if(animal instanceof Turtle) {
                 if(animal.isAlive()) {
                     animal.setDead();
-                    foodLevel = RABBITFISH_FOOD_VALUE;
+                    foodLevel = TURTLE_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }
@@ -159,13 +159,6 @@ public class KillerWhale extends Animal
                 if(animal.isAlive()) {
                     animal.setDead();
                     foodLevel = CLOWNFISH_FOOD_VALUE;
-                    foodLocation = loc;
-                }
-            }
-            else if(animal instanceof Swordfish){
-                if(animal.isAlive()) {
-                    animal.setDead();
-                    foodLevel = SWORDFISH_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }

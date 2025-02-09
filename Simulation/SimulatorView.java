@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+import java.lang.Math;
 /**
  * A graphical view of the simulation grid.
  * The view displays a colored rectangle for each location 
@@ -31,6 +31,8 @@ public class SimulatorView extends JFrame
     private final Map<Class<?>, Color> colors;
     // A statistics object computing and storing simulation information
     private final FieldStats stats;
+    
+    
 
     /**
      * Create a view of the given width and height.
@@ -126,6 +128,7 @@ public class SimulatorView extends JFrame
 
             }
         }
+        
         stats.countFinished();
 
         population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
@@ -157,7 +160,9 @@ public class SimulatorView extends JFrame
         private int xScale, yScale;
         Dimension size;
         private Graphics g;
+        private Graphics g2;
         private Image fieldImage;
+        private Image backdrop;
 
         /**
          * Create a new FieldView component.
@@ -187,7 +192,12 @@ public class SimulatorView extends JFrame
             if(! size.equals(getSize())) {  // if the size has changed...
                 size = getSize();
                 fieldImage = fieldView.createImage(size.width, size.height);
+                backdrop = fieldView.createImage(size.width, size.height);
+                
                 g = fieldImage.getGraphics();
+                
+
+                
 
                 xScale = size.width / gridWidth;
                 if(xScale < 1) {
@@ -218,7 +228,18 @@ public class SimulatorView extends JFrame
             if(fieldImage != null) {
                 Dimension currentSize = getSize();
                 if(size.equals(currentSize)) {
+                    
                     g.drawImage(fieldImage, 0, 0, null);
+                    //new Color(255, 255, 255, 0.5f)
+                    if(!Time.isDay()){
+                        g.setColor(new Color(0,0,0,100));
+                    }
+                    else{
+                        g.setColor(new Color(0,0,0,0));
+                    }
+                    
+                    g.fillRect(0,0,size.width,size.height);
+             
                 }
                 else {
                     // Rescale the previous image.

@@ -19,7 +19,7 @@ public class Algae extends Plant
     // The likelihood of a fox breeding.
     private static final double BREEDING_PROBABILITY = 0.9;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 5;
+    private static final int MAX_LITTER_SIZE = 7;
 
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();

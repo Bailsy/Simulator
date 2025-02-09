@@ -15,12 +15,12 @@ public class Simulator
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
     // The probability that a fox will be created in any given grid position.
-    private static final double SWORDFISH_CREATION_PROBABILITY = 0.02;
+    private static final double SWORDFISH_CREATION_PROBABILITY = 0.01;
     // The probability that a rabbit will be created in any given position.
     
-    private static final double TURTLE_CREATION_PROBABILITY = 0.06;
-    private static final double PARROTFISH_CREATION_PROBABILITY = 0.08;
-    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.06;
+    private static final double TURTLE_CREATION_PROBABILITY = 0.14;
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.14;
+    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.14;
     
     // The probability that a rabbit will be created in any given position.
     private static final double WHITESHARK_CREATION_PROBABILITY = 0.03;
@@ -29,7 +29,7 @@ public class Simulator
     // The probability that a rabbit will be created in any given position.
     
     // The probability that a algae will be created in any given position.
-    private static final double ALGAE_CREATION_PROBABILITY = 0.01;
+    private static final double ALGAE_CREATION_PROBABILITY = 0.5;
     
 
     // The current state of the field.
