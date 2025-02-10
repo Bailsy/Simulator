@@ -110,12 +110,17 @@ public class SimulatorView extends JFrame
 
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
-                Object animal = field.getAnimalAt(new Location(row, col));
-                Object plant = field.getPlantAt(new Location(row, col));
+                Animal animal = field.getAnimalAt(new Location(row, col));
+                Plant plant = field.getPlantAt(new Location(row, col));
                 
                 if(animal != null) {
                     stats.incrementCount(animal.getClass());
-                    fieldView.drawMark(col, row, getColor(animal.getClass()));
+                    if((animal.isInfected())){
+                        fieldView.drawMark(col, row, Color.white);
+                    }
+                    else{
+                        fieldView.drawMark(col, row, getColor(animal.getClass()));
+                    }
                 }
                 else if(plant != null) {
                     stats.incrementCount(plant.getClass());
@@ -196,9 +201,6 @@ public class SimulatorView extends JFrame
                 
                 g = fieldImage.getGraphics();
                 
-
-                
-
                 xScale = size.width / gridWidth;
                 if(xScale < 1) {
                     xScale = GRID_VIEW_SCALING_FACTOR;

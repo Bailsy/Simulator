@@ -28,6 +28,8 @@ public abstract class Animal implements Organism
     protected boolean isMale;
     // A Random for the animal's gender to be randomised.
     private Random random = new Random();
+    // A boolean which keeps track of whether the animal is diseased
+    protected boolean infected;
     
     private static Time time = new Time();
 
@@ -40,6 +42,7 @@ public abstract class Animal implements Organism
         this.alive = true;
         this.location = location;
         this.isMale = random.nextBoolean();
+        this.infected = false;
     }
     
     /**
@@ -107,5 +110,13 @@ public abstract class Animal implements Organism
     public static Time getTime()
     {
         return time;
+    }
+    
+    public void setInfected(){
+        infected = true;
+    }
+    
+    public boolean isInfected(){
+        return infected;
     }
 }

@@ -17,9 +17,9 @@ public class Algae extends Plant
     // The age to which a fox can live.
     private static final int MAX_AGE = 10;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.9;
+    private static final double BREEDING_PROBABILITY = 0.8;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 7;
+    private static final int MAX_LITTER_SIZE = 10;
 
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();

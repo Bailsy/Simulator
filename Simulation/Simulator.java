@@ -29,7 +29,7 @@ public class Simulator
     // The probability that a rabbit will be created in any given position.
     
     // The probability that a algae will be created in any given position.
-    private static final double ALGAE_CREATION_PROBABILITY = 0.5;
+    private static final double ALGAE_CREATION_PROBABILITY = 0.5; 
     
 
     // The current state of the field.
@@ -39,8 +39,7 @@ public class Simulator
     // A graphical view of the simulation.
     private final SimulatorView view;
     
-    private static Time time = new Time();
-
+    private Time time;
     /**
      * Construct a simulation field with default size.
      */
@@ -127,6 +126,7 @@ public class Simulator
      */
     public void reset()
     {
+        time = new Time();
         field = new Field(DEFAULT_DEPTH, DEFAULT_WIDTH);
         step = 0;
         populate();

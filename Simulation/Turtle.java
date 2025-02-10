@@ -17,6 +17,8 @@ public class Turtle extends Animal
     private static final int MAX_AGE = 40;
     // The likelihood of a rabbit breeding.
     private static final double BREEDING_PROBABILITY = 0.6;
+    // The likelihood of infection.
+    private static final double INFECTION_PROBABILITY = 0.02;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 3;
     // The food value of a single Clownfish. In effect, this is the
@@ -67,6 +69,13 @@ public class Turtle extends Animal
                 
             if(Time.isDay()) {
                 incrementHunger();
+                
+                if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
+                    setInfected();
+                 }
+                if(infected && rand.nextDouble() <= 0.25) {
+                    setDead();
+                }
                 if(! freeLocations.isEmpty()) {
                     giveBirth(nextFieldState);
                 }
@@ -159,6 +168,9 @@ public class Turtle extends Animal
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Turtle young = new Turtle(false, loc);
+                if(isInfected()){
+                    young.setInfected();
+                }
                 nextFieldState.placeAnimal(young, loc);
             }
         }
