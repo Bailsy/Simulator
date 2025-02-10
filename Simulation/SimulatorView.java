@@ -115,8 +115,8 @@ public class SimulatorView extends JFrame
                 
                 if(animal != null) {
                     stats.incrementCount(animal.getClass());
-                    if((animal.isInfected())){
-                        fieldView.drawMark(col, row, Color.white);
+                    if((animal.isInfected())){   
+                        fieldView.drawMark(col, row, new Color(getColor(animal.getClass()).getRed(),getColor(animal.getClass()).getGreen(), getColor(animal.getClass()).getBlue(), 128));
                     }
                     else{
                         fieldView.drawMark(col, row, getColor(animal.getClass()));
