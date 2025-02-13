@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=WeatherManager
+comment0.text=\n\ The\ weather\ manager\ class\ manages\ the\ different\ types\ of\ weather\n\ phenome\n
+comment1.params=
+comment1.target=WeatherManager()
+comment1.text=\n\ \n
+comment2.params=deltaTime
+comment2.target=void\ update(double)
+comment2.text=\n\ \n
+comment3.params=
+comment3.target=void\ changeWeather()
+comment4.params=
+comment4.target=double\ randomDuration()
+comment5.params=
+comment5.target=Weather\ getCurrentWeather()
+comment6.params=
+comment6.target=double\ getPredatorHuntingModifier()
+comment7.params=
+comment7.target=double\ getPreyFeedingModifier()
+comment8.params=
+comment8.target=double\ getPlantGrowthModifier()
+numComments=9

@@ -3,44 +3,49 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * A simple model of a fox.
- * Swordfishs age, move, eat rabbits or deers, and die.
+ * A model of a swordfish they can breed, eat preys to survive and if 
+ * their maximun age is reached or they dont eat what they are required 
+ * they will die.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.1
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class Swordfish extends Animal
 {
-    // Characteristics shared by all foxes (class variables).
-    // The age at which a fox can start to breed.
+    // Characteristics shared by all swordfish (class variables).
+
+    // The age at which a swordfish can start to breed.
     private static final int BREEDING_AGE = 3;
-    // The age to which a fox can live.
+    // The age to which a swordfish can live.
     private static final int MAX_AGE = 500;
-    // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.05;
+    // The likelihood of a swordfish breeding.
+    private static final double BREEDING_PROBABILITY = 0.15;
+    // The likelihood of a parrotfish catching the disease.
+    private static final double INFECTION_PROBABILITY = 0.005;
+    // The likelihood of a parrotfish transmitting the disease.
+    private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
-    // The food value of a single Turtle.
-    private static final int TURTLE_FOOD_VALUE = 300;
-    // The food value of a single Parrotfish.
+    // The food value of a single parrotfish. In effect, this is the
+    // number of steps a swordfish can go before it has to eat again.
     private static final int PARROTFISH_FOOD_VALUE = 300;
-    
+    // The food value of a single clownfish.
     private static final int CLOWNFISH_FOOD_VALUE = 300;
+
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
-    
+
     // Individual characteristics (instance fields).
 
-    // The fox's age.
+    // The swordfish age.
     private int age;
-    // The fox's food level, which is increased by eating rabbits and deers.
+    // The swordfish food level, which is increased by eating parrotfish and clownfish.
     private int foodLevel;
 
     /**
-     * Create a white shark. A white shark can be created as a new born (age zero
+     * Create a swordfish. A swordfish can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the white shark will have random age and hunger level.
+     * @param randomAge If true, the swordfish will have random age and hunger level.
      * @param location The location within the field.
      */
     public Swordfish(boolean randomAge, Location location)
@@ -52,13 +57,14 @@ public class Swordfish extends Animal
         else {
             age = 0;
         }
-        foodLevel = rand.nextInt(TURTLE_FOOD_VALUE);
+        foodLevel = rand.nextInt(PARROTFISH_FOOD_VALUE);
     }
-    
+
     /**
-     * This is what the white shark does most of the time: it hunts for
-     * rabbits or deers. In the process, it might breed, die of hunger,
-     * or die of old age.
+     * Defines the actions performed by the swordfish during one simulation
+     * step: it looks for its source of food and in the process, it might 
+     * breed, die of hunger or die of old age.
+     * 
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
      */
@@ -68,7 +74,15 @@ public class Swordfish extends Animal
         incrementHunger();
         if(isAlive()) {
             List<Location> freeLocations =
-                    nextFieldState.getFreeAdjacentLocations(getLocation());
+                nextFieldState.getFreeAdjacentLocations(getLocation());
+                
+            if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
+                setInfected();
+            }
+            if(infected && rand.nextDouble() <= 0.1) {
+                setDead();
+            }
+            
             if(! freeLocations.isEmpty()) {
                 giveBirth(nextFieldState);
             }
@@ -90,20 +104,18 @@ public class Swordfish extends Animal
         }
     }
 
-
-
     @Override
     public String toString() {
-        return "White shark{" +
-                "age=" + age +
-                ", alive=" + isAlive() +
-                ", location=" + getLocation() +
-                ", foodLevel=" + foodLevel +
-                '}';
+        return "Swordfish{" +
+        "age=" + age +
+        ", alive=" + isAlive() +
+        ", location=" + getLocation() +
+        ", foodLevel=" + foodLevel +
+        '}';
     }
 
     /**
-     * Increase the age. This could result in the white shark's death.
+     * Increase the age. This could result in the swordfish death.
      */
     private void incrementAge()
     {
@@ -112,9 +124,9 @@ public class Swordfish extends Animal
             setDead();
         }
     }
-    
+
     /**
-     * Make this white shark more hungry. This could result in the white shark's death.
+     * Make this swordfish more hungry. This could result in the swordfish death.
      */
     private void incrementHunger()
     {
@@ -123,10 +135,11 @@ public class Swordfish extends Animal
             setDead();
         }
     }
-    
+
     /**
-     * Look for rabbits and deers adjacent to the current location.
-     * Only the first live rabbit or deer is eaten.
+     * Look for preys adjacent to the current location.
+     * Only the first prey is eaten.
+     * 
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
      */
@@ -145,13 +158,6 @@ public class Swordfish extends Animal
                     foodLocation = loc;
                 }
             }
-            else if(animal instanceof  Turtle) {
-                if(animal.isAlive()) {
-                    animal.setDead();
-                    foodLevel = TURTLE_FOOD_VALUE;
-                    foodLocation = loc;
-                }
-            }
             else if(animal instanceof  Clownfish) {
                 if(animal.isAlive()) {
                     animal.setDead();
@@ -162,23 +168,45 @@ public class Swordfish extends Animal
         }
         return foodLocation;
     }
-    
+
+    /**
+     * Give birth to a new swordfish that spawns if there are free locations
+     * around their parent.
+     * 
+     * @param nextFieldState Where the new swordfish is going to be added.
+     */
     public void giveBirth(Field nextFieldState) {
-        Animal partner = findBreedingPartner(nextFieldState);
-        if (partner != null) {
+        Animal mate = findBreedingMate(nextFieldState);
+        if (mate != null) {
+            if (this.isInfected() && !mate.isInfected()) {
+                if (rand.nextDouble() <= TRANSMISSION_PROBABILITY) {
+                    mate.setInfected();
+                }
+            } else if (!this.isInfected() && mate.isInfected()) {
+                if (rand.nextDouble() <= TRANSMISSION_PROBABILITY) {
+                    this.setInfected();
+                }
+            }
             int births = breed();
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Swordfish young = new Swordfish(false, loc);
+                double INHERIT_PROBABILITY = 0.01;
+                if(mate.isInfected() || this.isInfected()) {
+                    if (rand.nextDouble() <= INHERIT_PROBABILITY) {
+                        young.setInfected();
+                    }
+                }
                 nextFieldState.placeAnimal(young, loc);
             }
         }
     }
-        
+
     /**
      * Generate a number representing the number of births,
      * if it can breed.
+     * 
      * @return The number of births (may be zero).
      */
     private int breed()
@@ -194,7 +222,9 @@ public class Swordfish extends Animal
     }
 
     /**
-     * A white shark can breed if it has reached the breeding age.
+     * A swordfish can breed if it has reached the breeding age.
+     * 
+     * @return true If they can start breeding.
      */
     private boolean canBreed()
     {

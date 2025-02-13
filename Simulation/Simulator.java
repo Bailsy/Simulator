@@ -1,36 +1,40 @@
 import java.util.*;
 
 /**
- * A simple predator-prey simulator, based on a rectangular field containing 
- * rabbits and foxes.
+ * The simulator class manages the execution of the simulation, coordinating
+ * the environment and organisms.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.1
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class Simulator
 {
     // Constants representing configuration information for the simulation.
+
     // The default width for the grid.
     private static final int DEFAULT_WIDTH = 120;
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
-    // The probability that a fox will be created in any given grid position.
+
+    // The probability that a swordfish will be created in any given grid position.
     private static final double SWORDFISH_CREATION_PROBABILITY = 0.01;
-    // The probability that a rabbit will be created in any given position.
-    
-    private static final double TURTLE_CREATION_PROBABILITY = 0.14;
-    private static final double PARROTFISH_CREATION_PROBABILITY = 0.14;
-    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.14;
-    
-    // The probability that a rabbit will be created in any given position.
+
+    // The probability that a trutle will be created in any given position.
+    private static final double TURTLE_CREATION_PROBABILITY = 0.13;
+
+    // The probability that a parrotfish will be created in any given position.
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.13;
+
+    // The probability that a clownfish will be created in any given position.
+    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.13;
+
+    // The probability that a white shark will be created in any given position.
     private static final double WHITESHARK_CREATION_PROBABILITY = 0.03;
-    // The probability that a rabbit will be created in any given position.
+
+    // The probability that a killer whale will be created in any given position.
     private static final double KILLERWHALE_CREATION_PROBABILITY = 0.008;
-    // The probability that a rabbit will be created in any given position.
-    
+
     // The probability that a algae will be created in any given position.
-    private static final double ALGAE_CREATION_PROBABILITY = 0.5; 
-    
+    private static final double ALGAE_CREATION_PROBABILITY = 0.5;
 
     // The current state of the field.
     private Field field;
@@ -38,8 +42,10 @@ public class Simulator
     private int step;
     // A graphical view of the simulation.
     private final SimulatorView view;
-    
-    private Time time;
+
+    // An instance of time to keep track of it in the simulator.
+    private static Time time = new Time();
+
     /**
      * Construct a simulation field with default size.
      */
@@ -47,9 +53,10 @@ public class Simulator
     {
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
     }
-    
+
     /**
      * Create a simulation field with the given size.
+     * 
      * @param depth Depth of the field. Must be greater than zero.
      * @param width Width of the field. Must be greater than zero.
      */
@@ -61,13 +68,11 @@ public class Simulator
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        
-        
-        view = new SimulatorView(depth, width);
 
+        view = new SimulatorView(depth, width);
         reset();
     }
-    
+
     /**
      * Run the simulation from its current state for a reasonably long 
      * period (4000 steps).
@@ -76,10 +81,11 @@ public class Simulator
     {
         simulate(700);
     }
-    
+
     /**
      * Run the simulation for the given number of steps.
      * Stop before the given number of steps if it ceases to be viable.
+     * 
      * @param numSteps The number of steps to run for.
      */
     public void simulate(int numSteps)
@@ -87,17 +93,17 @@ public class Simulator
         reportStats();
         for(int n = 1; n <= numSteps && field.isViable(); n++) {
             simulateOneStep();
-            delay(50);         // adjust this to change execution speed
+            delay(50);         // Adjust this to change execution speed
         }
     }
-    
+
     /**
      * Run the simulation from its current state for a single step.
-     * Iterate over the whole field updating the state of each fox and rabbit.
+     * Iterate over the whole field updating the state of every organism
+     * and making the time pass.
      */
     public void simulateOneStep()
     {
-        
         time.increment();
         step++;
         // Use a separate Field to store the starting state of
@@ -108,21 +114,21 @@ public class Simulator
         for (Animal anAnimal : animals) {
             anAnimal.act(field, nextFieldState);
         }
-        
+
         List<Plant> plants = field.getPlants();
         for (Plant plant : plants) {
             plant.act(field, nextFieldState);
         }
-        
+
         // Replace the old state with the new one.
         field = nextFieldState;
 
         reportStats();
         view.showStatus(step, field);
     }
-        
+
     /**
-     * Reset the simulation to a starting position.
+     * Reset the simulation to a starting position and time.
      */
     public void reset()
     {
@@ -132,9 +138,9 @@ public class Simulator
         populate();
         view.showStatus(step, field);
     }
-    
+
     /**
-     * Randomly populate the field with foxes and rabbits.
+     * Randomly populate the field with organisms.
      */
     private void populate()
     {
@@ -177,7 +183,7 @@ public class Simulator
                     Algae algae = new Algae(true, location);
                     field.placePlant(algae, location);
                 }
-                // else leave the location empty.
+                // Else leave the location empty.
             }
         }
     }
@@ -190,9 +196,10 @@ public class Simulator
         //System.out.print("Step: " + step + " ");
         field.fieldStats();
     }
-    
+
     /**
      * Pause for a given time.
+     * 
      * @param milliseconds The time to pause for, in milliseconds
      */
     private void delay(int milliseconds)

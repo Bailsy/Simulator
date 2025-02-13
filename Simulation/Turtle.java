@@ -3,42 +3,47 @@ import java.util.Random;
 import java.util.Iterator;
 
 /**
- * A simple model of a rabbit.
- * Rabbits age, move, breed, and die.
+ * A model of a turtle they can breed, eat algae to survive, they also 
+ * have a period in which they sleep and if the maximun age is reached or 
+ * they dont eat what they are required they will die.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.1
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class Turtle extends Animal
 {
-    // Characteristics shared by all foxes (class variables).
+    // Characteristics shared by all turtle's (class variables).
+
+    // The age in which a turtle can start breeding.
     private static final int BREEDING_AGE = 5;
-    // The age to which a rabbit can live.
-    private static final int MAX_AGE = 40;
-    // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0.6;
-    // The likelihood of infection.
-    private static final double INFECTION_PROBABILITY = 0.02;
+    // The age to which a turtle can live.
+    private static final int MAX_AGE = 50;
+    // The likelihood of a turtle breeding.
+    private static final double BREEDING_PROBABILITY = 0.3;
+    // The likelihood of a parrotfish catching the disease.
+    private static final double INFECTION_PROBABILITY = 0.01;
+    // The likelihood of a parrotfish transmitting the disease.
+    private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 3;
-    // The food value of a single Clownfish. In effect, this is the
+    // The food value of an algae. Basically, the steps
+    // they can go before they have to eat again.
     private static final int ALGAE_FOOD_VALUE = 30;
-    
+
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
     // Individual characteristics (instance fields).
 
-    // The fox's age.
+    // The turtle's age.
     private int age;
-    // The fox's food level, which is increased by eating rabbits.
+    // The turtle's food level, which is increased by eating algae.
     private int foodLevel;
 
     /**
-     * Create a fox. A fox can be created as a new born (age zero
+     * Create a turtle. A turtle can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the fox will have random age and hunger level.
+     * @param randomAge If true, the turtle will have random age and hunger level.
      * @param location The location within the field.
      */
     public Turtle(boolean randomAge, Location location)
@@ -54,9 +59,11 @@ public class Turtle extends Animal
     }
 
     /**
-     * This is what the fox does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
-     * or die of old age.
+     * Defines the actions performed by the parrotfish during one simulation
+     * step: it looks for its source of food and in the process, it might 
+     * give birth, die of hunger, die of the disease or die of old age. They
+     * are active during the day time.
+     * 
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
      */
@@ -66,16 +73,16 @@ public class Turtle extends Animal
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-                
-            if(Time.isDay()) {
+            if(Time.isDay()) { // What they do if its day time.
                 incrementHunger();
                 
                 if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
                     setInfected();
                  }
-                if(infected && rand.nextDouble() <= 0.25) {
+                if(infected && rand.nextDouble() <= 0.1) {
                     setDead();
                 }
+                
                 if(! freeLocations.isEmpty()) {
                     giveBirth(nextFieldState);
                 }
@@ -96,7 +103,7 @@ public class Turtle extends Animal
                 }
             }
             else {
-                nextFieldState.placeAnimal(this, getLocation());
+                nextFieldState.placeAnimal(this, getLocation()); // Sleep if its night time.
             }
         }
     }
@@ -112,7 +119,7 @@ public class Turtle extends Animal
     }
 
     /**
-     * Increase the age. This could result in the fox's death.
+     * Increase the age. This could result in the turtle's death.
      */
     private void incrementAge()
     {
@@ -123,7 +130,7 @@ public class Turtle extends Animal
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this turtle more hungry. This could result in the turtles's death.
      */
     private void incrementHunger()
     {
@@ -134,8 +141,9 @@ public class Turtle extends Animal
     }
 
     /**
-     * Look for rabbits adjacent to the current location.
-     * Only the first live rabbit is eaten.
+     * Look for algae adjacent to the current location.
+     * Only the first algae is eaten.
+     * 
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
      */
@@ -147,8 +155,6 @@ public class Turtle extends Animal
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Plant plant = field.getPlantAt(loc);
-            Animal animal = field.getAnimalAt(loc);
-           
             if(plant instanceof Algae) {
                 if(plant.isAlive()){
                     plant.setDead();
@@ -160,16 +166,34 @@ public class Turtle extends Animal
         return foodLocation;
     }
 
+    /**
+     * Give birth to a new turtle that spawns in the first free 
+     * location around their parent.
+     * 
+     * @param nextFieldState Where the new turtle is going to be added.
+     */
     public void giveBirth(Field nextFieldState) {
-        Animal partner = findBreedingPartner(nextFieldState);
-        if (partner != null) {
+        Animal mate = findBreedingMate(nextFieldState);
+        if (mate != null) {
+            if (this.isInfected() && !mate.isInfected()) {
+                if (rand.nextDouble() <= TRANSMISSION_PROBABILITY) {
+                    mate.setInfected();
+                }
+            } else if (!this.isInfected() && mate.isInfected()) {
+                if (rand.nextDouble() <= TRANSMISSION_PROBABILITY) {
+                    this.setInfected();
+                }
+            }
             int births = breed();
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Turtle young = new Turtle(false, loc);
-                if(isInfected()){
-                    young.setInfected();
+                double INHERIT_PROBABILITY = 0.01;
+                if(mate.isInfected() || this.isInfected()) {
+                    if (rand.nextDouble() <= INHERIT_PROBABILITY) {
+                        young.setInfected();
+                    }
                 }
                 nextFieldState.placeAnimal(young, loc);
             }
@@ -179,6 +203,7 @@ public class Turtle extends Animal
     /**
      * Generate a number representing the number of births,
      * if it can breed.
+     * 
      * @return The number of births (may be zero).
      */
     private int breed()
@@ -194,7 +219,9 @@ public class Turtle extends Animal
     }
 
     /**
-     * A fox can breed if it has reached the breeding age.
+     * A turtle can breed if it has reached the breeding age.
+     * 
+     * @return true If they can start breeding.
      */
     private boolean canBreed()
     {

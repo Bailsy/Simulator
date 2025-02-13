@@ -6,8 +6,7 @@ import java.util.Map;
  * of a field. It is flexible: it will create and maintain a counter 
  * for any class of object that is found within the field.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.0
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class FieldStats
 {
@@ -29,6 +28,7 @@ public class FieldStats
 
     /**
      * Get details of what is in the field.
+     * 
      * @return A string describing what is in the field.
      */
     public String getPopulationDetails(Field field)
@@ -37,18 +37,18 @@ public class FieldStats
         if(!countsValid) {
             generatePlantCounts(field);
             generateAnimalCounts(field);
-            
+
         }
         for(Class<?> key : counters.keySet()) {
             Counter info = counters.get(key);
             details.append(info.getName())
-                   .append(": ")
-                   .append(info.getCount())
-                   .append(' ');
+            .append(": ")
+            .append(info.getCount())
+            .append(' ');
         }
         return details.toString();
     }
-    
+
     /**
      * Invalidate the current set of statistics; reset all 
      * counts to zero.
@@ -64,6 +64,7 @@ public class FieldStats
 
     /**
      * Increment the count for one class of animal.
+     * 
      * @param animalClass The class of animal to increment.
      */
     public void incrementCount(Class<?> organismClass)
@@ -89,18 +90,20 @@ public class FieldStats
     /**
      * Determine whether the simulation is still viable.
      * I.e., should it continue to run.
+     * 
      * @return true If there is more than one species alive.
      */
     public boolean isViable(Field field)
     {
         return field.isViable();
     }
-    
+
     /**
-     * Generate counts of the number of foxes and rabbits.
-     * These are not kept up to date as foxes and rabbits
-     * are placed in the field, but only when a request
+     * Generate counts of the number of animals.
+     * These are not kept up to date as animals are
+     * placed in the field, but only when a request
      * is made for the information.
+     * 
      * @param field The field to generate the stats for.
      */
     private void generateAnimalCounts(Field field)
@@ -116,7 +119,15 @@ public class FieldStats
         }
         countsValid = true;
     }
-    
+
+    /**
+     * Generate counts of the number of plants.
+     * These are not kept up to date as plants are
+     * placed in the field, but only when a request
+     * is made for the information.
+     * 
+     * @param field The field to generate the stats for.
+     */
     private void generatePlantCounts(Field field)
     {
         reset();

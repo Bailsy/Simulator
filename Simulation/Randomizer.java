@@ -26,6 +26,7 @@ public class Randomizer
 
     /**
      * Provide a random generator.
+     * 
      * @return A random object.
      */
     public static Random getRandom()
