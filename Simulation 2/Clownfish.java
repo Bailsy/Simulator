@@ -151,11 +151,13 @@ public class Clownfish extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
+        
+        double feedingModifier = Simulator.getWeatherManager().getPreyFeedingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Plant plant = field.getPlantAt(loc);
-            if(plant instanceof Algae) {
-                if(plant.isAlive()){
+            if(plant instanceof Algae && plant.isAlive()) {
+                if(rand.nextDouble() <= feedingModifier){
                     plant.setDead();
                     foodLevel = ALGAE_FOOD_VALUE;
                     foodLocation = loc;

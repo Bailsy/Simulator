@@ -3,54 +3,54 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * A model of a white shark they can breed, eat preys to survive and if 
+ * A model of a killer whale they can breed, eat preys to survive and if 
  * their maximun age is reached or they dont eat what they are required 
  * they will die.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
-public class WhiteShark extends Animal
+public class KillerWhale extends Animal
 {
-    // Characteristics shared by all white shark's (class variables).
+    // Characteristics shared by all killer whale's (class variables).
 
-    // The age at which a white shark can start to breed.
+    // The age at which a killer whale can start to breed.
     private static final int BREEDING_AGE = 3;
-    // The age to which a white shark can live.
+    // The age to which a killer whale can live.
     private static final int MAX_AGE = 500;
-    // The likelihood of a white shark breeding.
-    private static final double BREEDING_PROBABILITY = 0.1;
+    // The likelihood of a killer whale breeding.
+    private static final double BREEDING_PROBABILITY = 0.44;
     // The likelihood of a parrotfish catching the disease.
     private static final double INFECTION_PROBABILITY = 0.01;
     // The likelihood of a parrotfish transmitting the disease.
     private static final double TRANSMISSION_PROBABILITY = 0.01;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 2;
-    // The food value of a single turtle. In effect, this is the
-    // number of steps a white shark can go before it has to eat again.
-    private static final int TURTLE_FOOD_VALUE = 120;
+    private static final int MAX_LITTER_SIZE = 5;
+    // The food value of a single clownfish. In effect, this is the
+    // number of steps a killer whale can go before it has to eat again.
+    private static final int CLOWNFISH_FOOD_VALUE = 180;
+    // The food value of a single turtle.
+    private static final int TURTLE_FOOD_VALUE = 180;
     // The food value of a single parrotfish.
-    private static final int PARROTFISH_FOOD_VALUE = 120;
-    // The food value of a single clownfish.
-    private static final int CLOWNFISH_FOOD_VALUE = 120;
+    private static final int PARROTFISH_FOOD_VALUE = 180;
 
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
     // Individual characteristics (instance fields).
 
-    // The white shark's age.
+    // The killer whale's age.
     private int age;
-    // The white shark's food level, which is increased by eating turtle's, parrotfish and clownfish.
+    // The killer whale's food level, which is increased by eating clownfish, turtle's and parrotfish.
     private int foodLevel;
 
     /**
-     * Create a white shark. A white shark can be created as a new born (age zero
+     * Create a killer whale. A killer whale can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the white shark will have random age and hunger level.
+     * @param randomAge If true, the killer whale will have random age and hunger level.
      * @param location The location within the field.
      */
-    public WhiteShark(boolean randomAge, Location location)
+    public KillerWhale(boolean randomAge, Location location)
     {
         super(location);
         if(randomAge) {
@@ -59,11 +59,11 @@ public class WhiteShark extends Animal
         else {
             age = 0;
         }
-        foodLevel = rand.nextInt(TURTLE_FOOD_VALUE);
+        foodLevel = rand.nextInt(PARROTFISH_FOOD_VALUE);
     }
 
     /**
-     * Defines the actions performed by the white shark during one simulation
+     * Defines the actions performed by the killer whale during one simulation
      * step: it looks for its source of food and in the process, it might 
      * breed, die of hunger or die of old age.
      * 
@@ -77,14 +77,14 @@ public class WhiteShark extends Animal
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-            
+
             if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
                 setInfected();
             }
             if(infected && rand.nextDouble() <= 0.05) {
                 setDead();
             }
-            
+
             if(! freeLocations.isEmpty()) {
                 giveBirth(nextFieldState);
             }
@@ -108,7 +108,7 @@ public class WhiteShark extends Animal
 
     @Override
     public String toString() {
-        return "White shark{" +
+        return "Killer whale{" +
         "age=" + age +
         ", alive=" + isAlive() +
         ", location=" + getLocation() +
@@ -117,7 +117,7 @@ public class WhiteShark extends Animal
     }
 
     /**
-     * Increase the age. This could result in the white shark's death.
+     * Increase the age. This could result in the killer whale's death.
      */
     private void incrementAge()
     {
@@ -128,7 +128,7 @@ public class WhiteShark extends Animal
     }
 
     /**
-     * Make this white shark more hungry. This could result in the white shark's death.
+     * Make this killer whale more hungry. This could result in the killer whale's death.
      */
     private void incrementHunger()
     {
@@ -150,25 +150,27 @@ public class WhiteShark extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
+        
+        double huntingModifier = Simulator.getWeatherManager().getPredatorHuntingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Animal animal = field.getAnimalAt(loc);
-            if(animal instanceof  Parrotfish) {
-                if(animal.isAlive()) {
+            if(animal instanceof Parrotfish && animal.isAlive()) {
+                if(rand.nextDouble() <= huntingModifier) {
                     animal.setDead();
                     foodLevel = PARROTFISH_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }
-            else if(animal instanceof  Turtle) {
-                if(animal.isAlive()) {
+            else if(animal instanceof Turtle && animal.isAlive()) {
+                if(rand.nextDouble() <= huntingModifier) {
                     animal.setDead();
                     foodLevel = TURTLE_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }
-            else if(animal instanceof  Clownfish) {
-                if(animal.isAlive()) {
+            else if(animal instanceof Clownfish && animal.isAlive()) {
+                if(rand.nextDouble() <= huntingModifier) {
                     animal.setDead();
                     foodLevel = CLOWNFISH_FOOD_VALUE;
                     foodLocation = loc;
@@ -179,10 +181,10 @@ public class WhiteShark extends Animal
     }
 
     /**
-     * Give birth to a new white shark that spawns if there are free locations
+     * Give birth to a new swordfish that spawns if there are free locations
      * around their parent.
      * 
-     * @param nextFieldState Where the new white shark is going to be added.
+     * @param nextFieldState Where the new killer whale is going to be added.
      */
     public void giveBirth(Field nextFieldState) {
         Animal mate = findBreedingMate(nextFieldState);
@@ -200,7 +202,7 @@ public class WhiteShark extends Animal
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                WhiteShark young = new WhiteShark(false, loc);
+                Swordfish young = new Swordfish(false, loc);
                 double INHERIT_PROBABILITY = 0.01;
                 if(mate.isInfected() || this.isInfected()) {
                     if (rand.nextDouble() <= INHERIT_PROBABILITY) {
@@ -231,7 +233,7 @@ public class WhiteShark extends Animal
     }
 
     /**
-     * A white shark can breed if it has reached the breeding age.
+     * A killer whale can breed if it has reached the breeding age.
      * 
      * @return true If they can start breeding.
      */

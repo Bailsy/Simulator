@@ -1,52 +1,54 @@
 import java.util.List;
-import java.util.Random;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
- * A model of a turtle they can breed, eat algae to survive, they also 
- * have a period in which they sleep and if the maximun age is reached or 
- * they dont eat what they are required they will die.
+ * A model of a swordfish they can breed, eat preys to survive and if 
+ * their maximun age is reached or they dont eat what they are required 
+ * they will die.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
-public class Turtle extends Animal
+public class Swordfish extends Animal
 {
-    // Characteristics shared by all turtle's (class variables).
+    // Characteristics shared by all swordfish (class variables).
 
-    // The age in which a turtle can start breeding.
-    private static final int BREEDING_AGE = 5;
-    // The age to which a turtle can live.
-    private static final int MAX_AGE = 50;
-    // The likelihood of a turtle breeding.
-    private static final double BREEDING_PROBABILITY = 0.3;
+    // The age at which a swordfish can start to breed.
+    private static final int BREEDING_AGE = 3;
+    // The age to which a swordfish can live.
+    private static final int MAX_AGE = 500;
+    // The likelihood of a swordfish breeding.
+    private static final double BREEDING_PROBABILITY = 0.15;
     // The likelihood of a parrotfish catching the disease.
     private static final double INFECTION_PROBABILITY = 0.01;
     // The likelihood of a parrotfish transmitting the disease.
     private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
-    // The food value of an algae. Basically, the steps
-    // they can go before they have to eat again.
-    private static final int ALGAE_FOOD_VALUE = 30;
+    private static final int MAX_LITTER_SIZE = 2;
+    // The food value of a single parrotfish. In effect, this is the
+    // number of steps a swordfish can go before it has to eat again.
+    private static final int PARROTFISH_FOOD_VALUE = 300;
+    // The food value of a single clownfish.
+    private static final int CLOWNFISH_FOOD_VALUE = 300;
 
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
     // Individual characteristics (instance fields).
 
-    // The turtle's age.
+    // The swordfish age.
     private int age;
-    // The turtle's food level, which is increased by eating algae.
+    // The swordfish food level, which is increased by eating parrotfish and clownfish.
     private int foodLevel;
 
     /**
-     * Create a turtle. A turtle can be created as a new born (age zero
+     * Create a swordfish. A swordfish can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the turtle will have random age and hunger level.
+     * @param randomAge If true, the swordfish will have random age and hunger level.
      * @param location The location within the field.
      */
-    public Turtle(boolean randomAge, Location location)
+    public Swordfish(boolean randomAge, Location location)
     {
         super(location);
         if(randomAge) {
@@ -55,14 +57,13 @@ public class Turtle extends Animal
         else {
             age = 0;
         }
-        foodLevel = rand.nextInt(ALGAE_FOOD_VALUE);
+        foodLevel = rand.nextInt(PARROTFISH_FOOD_VALUE);
     }
 
     /**
-     * Defines the actions performed by the parrotfish during one simulation
+     * Defines the actions performed by the swordfish during one simulation
      * step: it looks for its source of food and in the process, it might 
-     * give birth, die of hunger, die of the disease or die of old age. They
-     * are active during the day time.
+     * breed, die of hunger or die of old age.
      * 
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
@@ -70,47 +71,42 @@ public class Turtle extends Animal
     public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
+        incrementHunger();
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-            if(Time.isDay()) { // What they do if its day time.
-                incrementHunger();
-                
-                if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
-                    setInfected();
-                 }
-                if(infected && rand.nextDouble() <= 0.1) {
-                    setDead();
-                }
-                
-                if(! freeLocations.isEmpty()) {
-                    giveBirth(nextFieldState);
-                }
-                // Move towards a source of food if found.
-                Location nextLocation = findFood(currentField);
-                if(nextLocation == null && ! freeLocations.isEmpty()) {
-                    // No food found - try to move to a free location.
-                    nextLocation = freeLocations.remove(0);
-                }
-                // See if it was possible to move.
-                if(nextLocation != null) {
-                    setLocation(nextLocation);
-                    nextFieldState.placeAnimal(this, nextLocation);
-                }
-                else {
-                    // Overcrowding.
-                    setDead();
-                }
+
+            if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
+                setInfected();
+            }
+            if(infected && rand.nextDouble() <= 0.1) {
+                setDead();
+            }
+
+            if(! freeLocations.isEmpty()) {
+                giveBirth(nextFieldState);
+            }
+            // Move towards a source of food if found.
+            Location nextLocation = findFood(currentField);
+            if(nextLocation == null && ! freeLocations.isEmpty()) {
+                // No food found - try to move to a free location.
+                nextLocation = freeLocations.remove(0);
+            }
+            // See if it was possible to move.
+            if(nextLocation != null) {
+                setLocation(nextLocation);
+                nextFieldState.placeAnimal(this, nextLocation);
             }
             else {
-                nextFieldState.placeAnimal(this, getLocation()); // Sleep if its night time.
+                // Overcrowding.
+                setDead();
             }
         }
     }
 
     @Override
     public String toString() {
-        return "Turtle{" +
+        return "Swordfish{" +
         "age=" + age +
         ", alive=" + isAlive() +
         ", location=" + getLocation() +
@@ -119,7 +115,7 @@ public class Turtle extends Animal
     }
 
     /**
-     * Increase the age. This could result in the turtle's death.
+     * Increase the age. This could result in the swordfish death.
      */
     private void incrementAge()
     {
@@ -130,7 +126,7 @@ public class Turtle extends Animal
     }
 
     /**
-     * Make this turtle more hungry. This could result in the turtles's death.
+     * Make this swordfish more hungry. This could result in the swordfish death.
      */
     private void incrementHunger()
     {
@@ -141,8 +137,8 @@ public class Turtle extends Animal
     }
 
     /**
-     * Look for algae adjacent to the current location.
-     * Only the first algae is eaten.
+     * Look for preys adjacent to the current location.
+     * Only the first prey is eaten.
      * 
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
@@ -152,13 +148,22 @@ public class Turtle extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
+        
+        double huntingModifier = Simulator.getWeatherManager().getPredatorHuntingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
-            Plant plant = field.getPlantAt(loc);
-            if(plant instanceof Algae) {
-                if(plant.isAlive()){
-                    plant.setDead();
-                    foodLevel = ALGAE_FOOD_VALUE;
+            Animal animal = field.getAnimalAt(loc);
+            if(animal instanceof Parrotfish && animal.isAlive()) {
+                if(rand.nextDouble() <= huntingModifier) {
+                    animal.setDead();
+                    foodLevel = PARROTFISH_FOOD_VALUE;
+                    foodLocation = loc;
+                }
+            }
+            else if(animal instanceof Clownfish && animal.isAlive()) {
+                if(rand.nextDouble() <= huntingModifier) {
+                    animal.setDead();
+                    foodLevel = CLOWNFISH_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }
@@ -167,10 +172,10 @@ public class Turtle extends Animal
     }
 
     /**
-     * Give birth to a new turtle that spawns in the first free 
-     * location around their parent.
+     * Give birth to a new swordfish that spawns if there are free locations
+     * around their parent.
      * 
-     * @param nextFieldState Where the new turtle is going to be added.
+     * @param nextFieldState Where the new swordfish is going to be added.
      */
     public void giveBirth(Field nextFieldState) {
         Animal mate = findBreedingMate(nextFieldState);
@@ -188,7 +193,7 @@ public class Turtle extends Animal
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Turtle young = new Turtle(false, loc);
+                Swordfish young = new Swordfish(false, loc);
                 double INHERIT_PROBABILITY = 0.01;
                 if(mate.isInfected() || this.isInfected()) {
                     if (rand.nextDouble() <= INHERIT_PROBABILITY) {
@@ -219,7 +224,7 @@ public class Turtle extends Animal
     }
 
     /**
-     * A turtle can breed if it has reached the breeding age.
+     * A swordfish can breed if it has reached the breeding age.
      * 
      * @return true If they can start breeding.
      */
@@ -228,3 +233,4 @@ public class Turtle extends Animal
         return age >= BREEDING_AGE;
     }
 }
+

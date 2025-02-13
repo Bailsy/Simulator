@@ -27,13 +27,12 @@ public class SimulatorView extends JFrame
     private final JLabel stepLabel;
     private final JLabel population;
     private final FieldView fieldView;
-    
+
     // A map for storing colors for participants in the simulation
     private final Map<Class<?>, Color> colors;
     // A statistics object computing and storing simulation information
     private final FieldStats stats;
-    
-    
+
 
     /**
      * Create a view of the given width and height.
@@ -56,9 +55,9 @@ public class SimulatorView extends JFrame
         setTitle("Underwater Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
-        
+
         setLocation(100, 50);
-        
+
         fieldView = new FieldView(height, width);
 
         Container contents = getContentPane();
@@ -68,7 +67,7 @@ public class SimulatorView extends JFrame
         pack();
         setVisible(true);
     }
-    
+
     /**
      * Define a color to be used for a given class of animal.
      * 
@@ -95,46 +94,48 @@ public class SimulatorView extends JFrame
         }
     }
 
-    /** Show the current status of the field. 
-    * @param step Which iteration step it is.
-    * @param field The field whose status is to be displayed. 
-    */ 
-    public void showStatus(int step, Field field) { 
-    if (!isVisible()) {
-        setVisible(true);
-    } 
+    /**
+     * Show the current status of the field.
+     * 
+     * @param step Which iteration step it is.
+     * @param field The field whose status is to be displayed.
+     */
+    public void showStatus(int step, Field field)
+    {
+        if (!isVisible()) {
+            setVisible(true);
+        } 
 
-    stepLabel.setText(STEP_PREFIX + step);
-    stats.reset();
-    fieldView.preparePaint();
+        stepLabel.setText(STEP_PREFIX + step);
+        stats.reset();
+        fieldView.preparePaint();
 
-    for (int row = 0; row < field.getDepth(); row++) {
-        for (int col = 0; col < field.getWidth(); col++) { 
-            Animal animal = field.getAnimalAt(new Location(row, col)); 
-            Plant plant = field.getPlantAt(new Location(row, col)); 
+        for (int row = 0; row < field.getDepth(); row++) {
+            for (int col = 0; col < field.getWidth(); col++) { 
+                Animal animal = field.getAnimalAt(new Location(row, col)); 
+                Plant plant = field.getPlantAt(new Location(row, col)); 
 
-            if (animal != null) { 
-                stats.incrementCount(animal.getClass());
+                if (animal != null) { 
+                    stats.incrementCount(animal.getClass());
 
-                if (animal.isInfected()) { 
-                    fieldView.drawMark(col, row, Color.white);
+                    if (animal.isInfected()) { 
+                        fieldView.drawMark(col, row, Color.white);
+                    } else { 
+                        fieldView.drawMark(col, row, getColor(animal.getClass())); 
+                    }
+                } else if (plant != null) { 
+                    stats.incrementCount(plant.getClass());
+                    fieldView.drawMark(col, row, getColor(plant.getClass()));
                 } else { 
-                    fieldView.drawMark(col, row, getColor(animal.getClass())); 
-                }
-            } else if (plant != null) { 
-                stats.incrementCount(plant.getClass());
-                fieldView.drawMark(col, row, getColor(plant.getClass()));
-            } else { 
-                fieldView.drawMark(col, row, EMPTY_COLOR);
-            } 
+                    fieldView.drawMark(col, row, EMPTY_COLOR);
+                } 
+            }
         }
-    }
 
-      stats.countFinished();
-      population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
-      fieldView.repaint();
+        stats.countFinished();
+        population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
+        fieldView.repaint();
     }
-
 
     /**
      * Determine whether the simulation should continue to run.
@@ -145,7 +146,7 @@ public class SimulatorView extends JFrame
     {
         return stats.isViable(field);
     }
-    
+
     /**
      * Provide a graphical view of a rectangular field. This is 
      * a nested class (a class defined inside a class) which
@@ -182,7 +183,7 @@ public class SimulatorView extends JFrame
         public Dimension getPreferredSize()
         {
             return new Dimension(gridWidth * GRID_VIEW_SCALING_FACTOR,
-                                 gridHeight * GRID_VIEW_SCALING_FACTOR);
+                gridHeight * GRID_VIEW_SCALING_FACTOR);
         }
 
         /**
@@ -195,12 +196,10 @@ public class SimulatorView extends JFrame
                 size = getSize();
                 fieldImage = fieldView.createImage(size.width, size.height);
                 backdrop = fieldView.createImage(size.width, size.height);
-                
+
                 g = fieldImage.getGraphics();
-                
 
                 
-
                 xScale = size.width / gridWidth;
                 if(xScale < 1) {
                     xScale = GRID_VIEW_SCALING_FACTOR;
@@ -211,7 +210,7 @@ public class SimulatorView extends JFrame
                 }
             }
         }
-        
+
         /**
          * Paint on grid location on this field in a given color.
          */
@@ -230,7 +229,7 @@ public class SimulatorView extends JFrame
             if(fieldImage != null) {
                 Dimension currentSize = getSize();
                 if(size.equals(currentSize)) {
-                    
+
                     g.drawImage(fieldImage, 0, 0, null);
                     //new Color(255, 255, 255, 0.5f)
                     if(!Time.isDay()){
@@ -239,9 +238,9 @@ public class SimulatorView extends JFrame
                     else{
                         g.setColor(new Color(0,0,0,0));
                     }
-                    
+
                     g.fillRect(0,0,size.width,size.height);
-             
+
                 }
                 else {
                     // Rescale the previous image.

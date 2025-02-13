@@ -1,56 +1,52 @@
 import java.util.List;
-import java.util.Iterator;
 import java.util.Random;
+import java.util.Iterator;
 
 /**
- * A model of a killer whale they can breed, eat preys to survive and if 
- * their maximun age is reached or they dont eat what they are required 
- * they will die.
+ * A model of a turtle they can breed, eat algae to survive, they also 
+ * have a period in which they sleep and if the maximun age is reached or 
+ * they dont eat what they are required they will die.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
-public class KillerWhale extends Animal
+public class Turtle extends Animal
 {
-    // Characteristics shared by all killer whale's (class variables).
-    
-    // The age at which a killer whale can start to breed.
-    private static final int BREEDING_AGE = 3;
-    // The age to which a killer whale can live.
-    private static final int MAX_AGE = 500;
-    // The likelihood of a killer whale breeding.
-    private static final double BREEDING_PROBABILITY = 0.44;
+    // Characteristics shared by all turtle's (class variables).
+
+    // The age in which a turtle can start breeding.
+    private static final int BREEDING_AGE = 5;
+    // The age to which a turtle can live.
+    private static final int MAX_AGE = 50;
+    // The likelihood of a turtle breeding.
+    private static final double BREEDING_PROBABILITY = 0.3;
     // The likelihood of a parrotfish catching the disease.
     private static final double INFECTION_PROBABILITY = 0.01;
     // The likelihood of a parrotfish transmitting the disease.
-    private static final double TRANSMISSION_PROBABILITY = 0.01;
+    private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 5;
-    // The food value of a single clownfish. In effect, this is the
-    // number of steps a killer whale can go before it has to eat again.
-    private static final int CLOWNFISH_FOOD_VALUE = 180;
-    // The food value of a single turtle.
-    private static final int TURTLE_FOOD_VALUE = 180;
-    // The food value of a single parrotfish.
-    private static final int PARROTFISH_FOOD_VALUE = 180;
+    private static final int MAX_LITTER_SIZE = 3;
+    // The food value of an algae. Basically, the steps
+    // they can go before they have to eat again.
+    private static final int ALGAE_FOOD_VALUE = 30;
 
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
     // Individual characteristics (instance fields).
 
-    // The killer whale's age.
+    // The turtle's age.
     private int age;
-    // The killer whale's food level, which is increased by eating clownfish, turtle's and parrotfish.
+    // The turtle's food level, which is increased by eating algae.
     private int foodLevel;
 
     /**
-     * Create a killer whale. A killer whale can be created as a new born (age zero
+     * Create a turtle. A turtle can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the killer whale will have random age and hunger level.
+     * @param randomAge If true, the turtle will have random age and hunger level.
      * @param location The location within the field.
      */
-    public KillerWhale(boolean randomAge, Location location)
+    public Turtle(boolean randomAge, Location location)
     {
         super(location);
         if(randomAge) {
@@ -59,13 +55,14 @@ public class KillerWhale extends Animal
         else {
             age = 0;
         }
-        foodLevel = rand.nextInt(PARROTFISH_FOOD_VALUE);
+        foodLevel = rand.nextInt(ALGAE_FOOD_VALUE);
     }
 
     /**
-     * Defines the actions performed by the killer whale during one simulation
+     * Defines the actions performed by the parrotfish during one simulation
      * step: it looks for its source of food and in the process, it might 
-     * breed, die of hunger or die of old age.
+     * give birth, die of hunger, die of the disease or die of old age. They
+     * are active during the day time.
      * 
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
@@ -73,43 +70,47 @@ public class KillerWhale extends Animal
     public void act(Field currentField, Field nextFieldState)
     {
         incrementAge();
-        incrementHunger();
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-            
-            if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
-                setInfected();
-            }
-            if(infected && rand.nextDouble() <= 0.05) {
-                setDead();
-            }
-            
-            if(! freeLocations.isEmpty()) {
-                giveBirth(nextFieldState);
-            }
-            // Move towards a source of food if found.
-            Location nextLocation = findFood(currentField);
-            if(nextLocation == null && ! freeLocations.isEmpty()) {
-                // No food found - try to move to a free location.
-                nextLocation = freeLocations.remove(0);
-            }
-            // See if it was possible to move.
-            if(nextLocation != null) {
-                setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
+            if(Time.isDay()) { // What they do if its day time.
+                incrementHunger();
+                
+                if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
+                    setInfected();
+                 }
+                if(infected && rand.nextDouble() <= 0.1) {
+                    setDead();
+                }
+                
+                if(! freeLocations.isEmpty()) {
+                    giveBirth(nextFieldState);
+                }
+                // Move towards a source of food if found.
+                Location nextLocation = findFood(currentField);
+                if(nextLocation == null && ! freeLocations.isEmpty()) {
+                    // No food found - try to move to a free location.
+                    nextLocation = freeLocations.remove(0);
+                }
+                // See if it was possible to move.
+                if(nextLocation != null) {
+                    setLocation(nextLocation);
+                    nextFieldState.placeAnimal(this, nextLocation);
+                }
+                else {
+                    // Overcrowding.
+                    setDead();
+                }
             }
             else {
-                // Overcrowding.
-                setDead();
+                nextFieldState.placeAnimal(this, getLocation()); // Sleep if its night time.
             }
         }
     }
 
-
     @Override
     public String toString() {
-        return "Killer whale{" +
+        return "Turtle{" +
         "age=" + age +
         ", alive=" + isAlive() +
         ", location=" + getLocation() +
@@ -118,7 +119,7 @@ public class KillerWhale extends Animal
     }
 
     /**
-     * Increase the age. This could result in the killer whale's death.
+     * Increase the age. This could result in the turtle's death.
      */
     private void incrementAge()
     {
@@ -129,7 +130,7 @@ public class KillerWhale extends Animal
     }
 
     /**
-     * Make this killer whale more hungry. This could result in the killer whale's death.
+     * Make this turtle more hungry. This could result in the turtles's death.
      */
     private void incrementHunger()
     {
@@ -140,8 +141,8 @@ public class KillerWhale extends Animal
     }
 
     /**
-     * Look for preys adjacent to the current location.
-     * Only the first prey is eaten.
+     * Look for algae adjacent to the current location.
+     * Only the first algae is eaten.
      * 
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
@@ -151,39 +152,27 @@ public class KillerWhale extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
+        
+        double feedingModifier = Simulator.getWeatherManager().getPreyFeedingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
-            Animal animal = field.getAnimalAt(loc);
-            if(animal instanceof Parrotfish) {
-                if(animal.isAlive()) {
-                    animal.setDead();
-                    foodLevel = PARROTFISH_FOOD_VALUE;
-                    foodLocation = loc;
-                }
-            }
-            else if(animal instanceof Turtle) {
-                if(animal.isAlive()) {
-                    animal.setDead();
-                    foodLevel = TURTLE_FOOD_VALUE;
-                    foodLocation = loc;
-                }
-            }
-            else if(animal instanceof Clownfish) {
-                if(animal.isAlive()) {
-                    animal.setDead();
-                    foodLevel = CLOWNFISH_FOOD_VALUE;
+            Plant plant = field.getPlantAt(loc);
+            if(plant instanceof Algae && plant.isAlive()) {
+                if(rand.nextDouble() <= feedingModifier){
+                    plant.setDead();
+                    foodLevel = ALGAE_FOOD_VALUE;
                     foodLocation = loc;
                 }
             }
         }
         return foodLocation;
     }
-    
+
     /**
-     * Give birth to a new swordfish that spawns if there are free locations
-     * around their parent.
+     * Give birth to a new turtle that spawns in the first free 
+     * location around their parent.
      * 
-     * @param nextFieldState Where the new killer whale is going to be added.
+     * @param nextFieldState Where the new turtle is going to be added.
      */
     public void giveBirth(Field nextFieldState) {
         Animal mate = findBreedingMate(nextFieldState);
@@ -201,7 +190,7 @@ public class KillerWhale extends Animal
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
-                Swordfish young = new Swordfish(false, loc);
+                Turtle young = new Turtle(false, loc);
                 double INHERIT_PROBABILITY = 0.01;
                 if(mate.isInfected() || this.isInfected()) {
                     if (rand.nextDouble() <= INHERIT_PROBABILITY) {
@@ -232,7 +221,7 @@ public class KillerWhale extends Animal
     }
 
     /**
-     * A killer whale can breed if it has reached the breeding age.
+     * A turtle can breed if it has reached the breeding age.
      * 
      * @return true If they can start breeding.
      */
@@ -241,4 +230,3 @@ public class KillerWhale extends Animal
         return age >= BREEDING_AGE;
     }
 }
-

@@ -12,20 +12,20 @@ public class Simulator
 
     // The default width for the grid.
     private static final int DEFAULT_WIDTH = 120;
-    // The default depth of the grid. .
+    // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
 
     // The probability that a swordfish will be created in any given grid position.
     private static final double SWORDFISH_CREATION_PROBABILITY = 0.01;
 
     // The probability that a trutle will be created in any given position.
-    private static final double TURTLE_CREATION_PROBABILITY = 0.13;
+    private static final double TURTLE_CREATION_PROBABILITY = 0.14;
 
     // The probability that a parrotfish will be created in any given position.
-    private static final double PARROTFISH_CREATION_PROBABILITY = 0.13;
+    private static final double PARROTFISH_CREATION_PROBABILITY = 0.14;
 
     // The probability that a clownfish will be created in any given position.
-    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.13;
+    private static final double CLOWNFISH_CREATION_PROBABILITY = 0.14;
 
     // The probability that a white shark will be created in any given position.
     private static final double WHITESHARK_CREATION_PROBABILITY = 0.03;
@@ -45,6 +45,9 @@ public class Simulator
 
     // An instance of time to keep track of it in the simulator.
     private static Time time = new Time();
+    
+    // An instance of WeatherManager for the simulation to have a view of it.
+    private static WeatherManager weatherManager = new WeatherManager();
 
     /**
      * Construct a simulation field with default size.
@@ -105,6 +108,7 @@ public class Simulator
     public void simulateOneStep()
     {
         time.increment();
+        weatherManager.update(1.0);
         step++;
         // Use a separate Field to store the starting state of
         // the next step.
@@ -210,5 +214,14 @@ public class Simulator
         catch(InterruptedException e) {
             // ignore
         }
+    }
+    
+    /**
+     * Return current weather.
+     * 
+     * @return The current weather.
+     */
+    public static WeatherManager getWeatherManager() {
+        return weatherManager;
     }
 }
