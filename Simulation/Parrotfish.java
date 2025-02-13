@@ -3,41 +3,47 @@ import java.util.Random;
 import java.util.Iterator;
 
 /**
- * A simple model of a rabbit.
- * Rabbits age, move, breed, and die.
+ * A model of a parrotfish they can breed, eat algae to survive, they also 
+ * have a period in which they sleep and if the maximun age is reached or 
+ * they dont eat what they are required they will die.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.1
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class Parrotfish extends Animal
 {
-    // Characteristics shared by all foxes (class variables).
-    // The age at which a fox can start to breed.
-    // Characteristics shared by all foxes (class variables).
-    // Characteristics shared by all foxes (class variables).
+    // Characteristics shared by all parrotfish (class variables).
+
+    // The age at which a parrotfish can start to breed.
     private static final int BREEDING_AGE = 5;
-    // The age to which a rabbit can live.
+    // The age to which a parrotfish can live.
     private static final int MAX_AGE = 40;
-    // The likelihood of a rabbit breeding.
-    private static final double BREEDING_PROBABILITY = 0.6;
+    // The likelihood of a parrotfish breeding.
+    private static final double BREEDING_PROBABILITY = 0.45;
+    // The likelihood of a parrotfish catching the disease.
+    private static final double INFECTION_PROBABILITY = 0.01;
+    // The likelihood of a parrotfish transmitting the disease.
+    private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 3;
-    // The food value of a single Clownfish. In effect, this is the
+    // The food value of a single algae. Basically, the steps
+    // they can go before they have to eat again.
     private static final int ALGAE_FOOD_VALUE = 30;
+
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
+
     // Individual characteristics (instance fields).
 
-    // The fox's age.
+    // The parrotfish age.
     private int age;
-    // The fox's food level, which is increased by eating rabbits.
+    // The parrotfish food level, which is increased by eating algae.
     private int foodLevel;
 
     /**
-     * Create a fox. A fox can be created as a new born (age zero
+     * Create a parrotfish. A parrotfish can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the fox will have random age and hunger level.
+     * @param randomAge If true, the parrotfish will have random age and hunger level.
      * @param location The location within the field.
      */
     public Parrotfish(boolean randomAge, Location location)
@@ -53,9 +59,11 @@ public class Parrotfish extends Animal
     }
 
     /**
-     * This is what the fox does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
-     * or die of old age.
+     * Defines the actions performed by the parrotfish during one simulation
+     * step: it looks for its source of food and in the process, it might 
+     * give birth, die of hunger, die of the disease or die of old age. They
+     * are active during the day time.
+     * 
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
      */
@@ -65,9 +73,16 @@ public class Parrotfish extends Animal
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-                
-            if(Time.isDay()) {
+            if(Time.isDay()) { // What they do if its day time.
                 incrementHunger();
+                
+                if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
+                    setInfected();
+                 }
+                if(infected && rand.nextDouble() <= 0.1) {
+                    setDead();
+                }
+                
                 if(! freeLocations.isEmpty()) {
                     giveBirth(nextFieldState);
                 }
@@ -88,15 +103,14 @@ public class Parrotfish extends Animal
                 }
             }
             else {
-                nextFieldState.placeAnimal(this, getLocation());
+                nextFieldState.placeAnimal(this, getLocation()); // Sleep if its night time.
             }
         }
     }
 
-
     @Override
     public String toString() {
-        return "Clownfish{" +
+        return "Parrotfish{" +
         "age=" + age +
         ", alive=" + isAlive() +
         ", location=" + getLocation() +
@@ -105,7 +119,7 @@ public class Parrotfish extends Animal
     }
 
     /**
-     * Increase the age. This could result in the fox's death.
+     * Increase the age. This could result in the parrotfish death.
      */
     private void incrementAge()
     {
@@ -116,7 +130,7 @@ public class Parrotfish extends Animal
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this fox more hungry. This could result in the parrotfish death.
      */
     private void incrementHunger()
     {
@@ -127,8 +141,9 @@ public class Parrotfish extends Animal
     }
 
     /**
-     * Look for rabbits adjacent to the current location.
-     * Only the first live rabbit is eaten.
+     * Look for algae adjacent to the current location.
+     * Only the first algae is eaten.
+     * 
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
      */
@@ -140,7 +155,6 @@ public class Parrotfish extends Animal
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Plant plant = field.getPlantAt(loc);
-           
             if(plant instanceof Algae) {
                 if(plant.isAlive()){
                     plant.setDead();
@@ -152,14 +166,35 @@ public class Parrotfish extends Animal
         return foodLocation;
     }
 
+    /**
+     * Give birth to a new parrotfish that spawns if there are free locations
+     * around their parent.
+     * 
+     * @param nextFieldState Where the new parrotfish is going to be added.
+     */
     public void giveBirth(Field nextFieldState) {
-        Animal partner = findBreedingPartner(nextFieldState);
-        if (partner != null) {
+        Animal mate = findBreedingMate(nextFieldState);
+        if (mate != null) {
+            if (this.isInfected() && !mate.isInfected()) {
+                if (rand.nextDouble() <= TRANSMISSION_PROBABILITY) {
+                    mate.setInfected();
+                }
+            } else if (!this.isInfected() && mate.isInfected()) {
+                if (rand.nextDouble() <= TRANSMISSION_PROBABILITY) {
+                    this.setInfected();
+                }
+            }
             int births = breed();
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
             for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
                 Location loc = freeLocations.remove(0);
                 Parrotfish young = new Parrotfish(false, loc);
+                double INHERIT_PROBABILITY = 0.01;
+                if(mate.isInfected() || this.isInfected()) {
+                    if (rand.nextDouble() <= INHERIT_PROBABILITY) {
+                        young.setInfected();
+                    }
+                }
                 nextFieldState.placeAnimal(young, loc);
             }
         }
@@ -168,6 +203,7 @@ public class Parrotfish extends Animal
     /**
      * Generate a number representing the number of births,
      * if it can breed.
+     * 
      * @return The number of births (may be zero).
      */
     private int breed()
@@ -183,7 +219,9 @@ public class Parrotfish extends Animal
     }
 
     /**
-     * A fox can breed if it has reached the breeding age.
+     * A parrotfish can breed if it has reached the breeding age.
+     * 
+     * @return true If they can start breeding.
      */
     private boolean canBreed()
     {

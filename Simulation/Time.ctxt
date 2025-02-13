@@ -1,15 +1,19 @@
 #BlueJ class context
 comment0.target=Time
-comment0.text=\n\ Write\ a\ description\ of\ class\ Time\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment0.text=\n\ The\ time\ class\ holds\ the\ time\ logic\ within\ the\ simulation,\ so\n\ the\ organisms\ can\ differ\ day\ and\ night.\n\n\ @author\ Nicol\u00E1s\ Alcal\u00E1\ Olea\ and\ Bailey\ Crossan\n
 comment1.params=
 comment1.target=Time()
-comment1.text=\n\ Constructor\ for\ objects\ of\ class\ Time\n
+comment1.text=\n\ We\ set\ the\ starting\ time\ of\ the\ simlation\ at\ 12PM.\n
 comment2.params=
 comment2.target=int\ getHour()
+comment2.text=\n\ @return\ The\ hour\ the\ simulation\ is\ currently\ at.\n
 comment3.params=
 comment3.target=int\ getMinute()
+comment3.text=\n\ @return\ The\ minute\ the\ simulation\ is\ currently\ at.\n
 comment4.params=
 comment4.target=void\ increment()
+comment4.text=\n\ Increments\ the\ time\ by\ 20\ minutes.\ If\ the\ minutes\ reach\ 60,\ they\ reset\ to\ 0\ \n\ and\ the\ hour\ is\ incremented.\ The\ hour\ wraps\ around\ after\ reaching\ 24.\n
 comment5.params=
 comment5.target=boolean\ isDay()
+comment5.text=\n\ Checking\ wether\ its\ day\ or\ night\ time.\n\ \n\ @return\ true\ If\ its\ day\ time,\ false\ otherwise.\n
 numComments=6

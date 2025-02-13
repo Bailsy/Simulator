@@ -2,22 +2,12 @@ import java.util.Random;
 import java.util.List;
 
 /**
- * Common elements of foxes and rabbits.
- *
- * @author David J. Barnes and Michael Kölling
- * @version 7.0
+ * The animal class represents a concept of an organism that can move
+ * and interact within the simulation in different ways depending on 
+ * their needs.
+ * 
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
-
-
-
-
-
-//IF You see this is works!!!
-// :)
-
-
-
-
 public abstract class Animal implements Organism
 {
     // Whether the animal is alive or not.
@@ -28,22 +18,30 @@ public abstract class Animal implements Organism
     protected boolean isMale;
     // A Random for the animal's gender to be randomised.
     private Random random = new Random();
-    
+    // An instance of Time so they act different depending on what time it is.
     private static Time time = new Time();
+    // A boolean which keeps track of whether the animal is diseased.
+    protected boolean infected;
 
     /**
-     * Constructor for objects of class Animal.
+     * Constructor for objects of class Animal, where we declare that the
+     * animal is alive, where it is going to spawn and give them a random 
+     * gender.
+     * 
      * @param location The animal's location.
      */
     public Animal(Location location)
     {
         this.alive = true;
         this.location = location;
-        this.isMale = random.nextBoolean();
+        this.isMale = random.nextBoolean(); // Gender randomised.
+        this.infected = false; 
     }
     
     /**
-     * Act.
+     * Makes the animal perform within the simulation. 
+     * See more in the subclasses.
+     * 
      * @param currentField The current state of the field.
      * @param nextFieldState The new state being built.
      */
@@ -51,7 +49,8 @@ public abstract class Animal implements Organism
     
     /**
      * Check whether the animal is alive or not.
-     * @return true if the animal is still alive.
+     * 
+     * @return true If the animal is still alive.
      */
     public boolean isAlive()
     {
@@ -69,6 +68,7 @@ public abstract class Animal implements Organism
     
     /**
      * Return the animal's location.
+     * 
      * @return The animal's location.
      */
     public Location getLocation()
@@ -78,6 +78,7 @@ public abstract class Animal implements Organism
     
     /**
      * Set the animal's location.
+     * 
      * @param location The new location.
      */
     protected void setLocation(Location location)
@@ -85,27 +86,67 @@ public abstract class Animal implements Organism
         this.location = location;
     }
     
+    /**
+     * Check wether the animal is a male or a female.
+     * 
+     * @return true If the animal is male, false if its a female.
+     */
     public boolean getIsMale() {
         return isMale;
     }
     
+    /**
+     * Ensures that the animal can breed with the others around them
+     * if they are from the same species and have a different gender.
+     * 
+     * @param mate The animal who its going to breed with.
+     * @return true If all the premises are met.
+     */
     protected boolean canBreedWith(Animal mate) {
         return mate != null && this.getClass().equals(mate.getClass()) && this.getIsMale() != mate.getIsMale();
     }
     
-    public Animal findBreedingPartner(Field field) {
+    /**
+     * Go through every field around the animal checking if there is
+     * an animal which it can breed with, if so breed.
+     * 
+     * @param field The field where the animal is currently at
+     * @return A valid mate to breed with.
+     */
+    public Animal findBreedingMate(Field field) {
         List<Location> adjacentFields = field.getAdjacentLocations(getLocation());
         for (Location loc : adjacentFields) {
             Animal animal = field.getAnimalAt(loc);
             if (animal != null && canBreedWith(animal) && animal.isAlive()) {
-                return animal; // Return first valid breeding partner found
+                return animal; // The first mate found.
             }
         }
-        return null; // No valid partner found
+        return null; // No valid mate found.
     }
     
+    /**
+     * Returns the current time.
+     * 
+     * @return The current time.
+     */
     public static Time getTime()
     {
         return time;
+    }
+    
+    /**
+     * Infects the animal with the disease.
+     */
+    public void setInfected(){
+        infected = true;
+    }
+    
+    /**
+     * Returns whether the animal is infected or not.
+     * 
+     * @return true If the animal is infected, false otherwise.
+     */
+    public boolean isInfected(){
+        return infected;
     }
 }

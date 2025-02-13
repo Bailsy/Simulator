@@ -6,12 +6,13 @@ import java.lang.Math;
 /**
  * A graphical view of the simulation grid.
  * The view displays a colored rectangle for each location 
- * representing its contents. It uses a default background color.
+ * representing its contents. It uses a blue background 
+ * color, representing the ocean, it becomes darker at
+ * night time.
  * Colors for each type of species can be defined using the
  * setColor method.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.0
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class SimulatorView extends JFrame
 {
@@ -36,6 +37,7 @@ public class SimulatorView extends JFrame
 
     /**
      * Create a view of the given width and height.
+     * 
      * @param height The simulation's height.
      * @param width  The simulation's width.
      */
@@ -45,10 +47,10 @@ public class SimulatorView extends JFrame
         colors = new LinkedHashMap<>();
         setColor(Clownfish.class, Color.orange);
         setColor(Swordfish.class, Color.blue);
-        setColor(Parrotfish.class, Color.green);
+        setColor(Parrotfish.class, Color.yellow);
         setColor(WhiteShark.class, Color.gray);
         setColor(KillerWhale.class, Color.black);
-        setColor(Turtle.class, Color.yellow);
+        setColor(Turtle.class, Color.green);
         setColor(Algae.class, new Color(0, 126, 0));
 
         setTitle("Underwater Simulation");
@@ -69,6 +71,7 @@ public class SimulatorView extends JFrame
     
     /**
      * Define a color to be used for a given class of animal.
+     * 
      * @param animalClass The animal's Class object.
      * @param color The color to be used for the given class.
      */
@@ -94,6 +97,7 @@ public class SimulatorView extends JFrame
 
     /**
      * Show the current status of the field.
+     * 
      * @param step Which iteration step it is.
      * @param field The field whose status is to be displayed.
      */
@@ -124,8 +128,6 @@ public class SimulatorView extends JFrame
                 else {
                     fieldView.drawMark(col, row, EMPTY_COLOR);
                 }
-                
-
             }
         }
         
@@ -137,6 +139,7 @@ public class SimulatorView extends JFrame
 
     /**
      * Determine whether the simulation should continue to run.
+     * 
      * @return true If there is more than one species alive.
      */
     public boolean isViable(Field field)
@@ -232,7 +235,7 @@ public class SimulatorView extends JFrame
                     g.drawImage(fieldImage, 0, 0, null);
                     //new Color(255, 255, 255, 0.5f)
                     if(!Time.isDay()){
-                        g.setColor(new Color(0,0,0,100));
+                        g.setColor(new Color(0,0,0,100)); // Becomes darker
                     }
                     else{
                         g.setColor(new Color(0,0,0,0));

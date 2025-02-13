@@ -17,7 +17,8 @@ public class Counter
 
     /**x
      * Provide a name for one of the simulation types.
-     * @param name  A name, e.g. "Fox".
+     * 
+     * @param name  A name, e.g. "Turtle".
      */
     public Counter(String name)
     {

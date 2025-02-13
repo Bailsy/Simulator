@@ -1,17 +1,20 @@
 /**
- * Write a description of class Time here.
+ * The time class holds the time logic within the simulation, so
+ * the organisms can differ day and night.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class Time
 {
+    // The time in which day time ends. (20PM)
     private static final int DAY_TIME = 20;
-    private static final int NIGHT_TIME = 5;
+    // The time in which night time ends. (4AM)
+    private static final int NIGHT_TIME = 4;
+    
     private static int hour;
     private static int minute;
     /**
-     * Constructor for objects of class Time
+     * We set the starting time of the simlation at 12PM.
      */
     public Time()
     {
@@ -19,16 +22,26 @@ public class Time
         minute = 0;
     }
     
+    /**
+     * @return The hour the simulation is currently at.
+     */
     public int getHour()
     {
         return hour;
     }
-    
+
+    /**
+     * @return The minute the simulation is currently at.
+     */
     public int getMinute()
     {
         return minute;
     }
     
+    /**
+     * Increments the time by 20 minutes. If the minutes reach 60, they reset to 0 
+     * and the hour is incremented. The hour wraps around after reaching 24.
+     */
     public void increment()
     {
         minute = (minute + 20) % 60;
@@ -37,6 +50,11 @@ public class Time
         }
     }
     
+    /**
+     * Checking wether its day or night time.
+     * 
+     * @return true If its day time, false otherwise.
+     */
     public static boolean isDay()
     {
         return hour < DAY_TIME && hour > NIGHT_TIME;

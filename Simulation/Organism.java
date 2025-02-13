@@ -1,9 +1,7 @@
-
 /**
- * Write a description of interface LivingBeing here.
+ * This class includes all types of organisms in the simulation.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public interface Organism
 {

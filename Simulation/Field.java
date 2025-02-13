@@ -2,10 +2,9 @@ import java.util.*;
 
 /**
  * Represent a rectangular grid of field positions.
- * Each position is able to store a single animal/object.
+ * Each position is able to store a single organism/object.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.0
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class Field
 {
@@ -14,7 +13,7 @@ public class Field
     
     // The dimensions of the field.
     private final int depth, width;
-    // Animals mapped by location.
+    // Organisms mapped by location.
     private final Map<Location, Organism> field = new HashMap<>();
     // The animals.
     private final List<Animal> animals = new ArrayList<>();
@@ -23,6 +22,7 @@ public class Field
 
     /**
      * Represent a field of the given dimensions.
+     * 
      * @param depth The depth of the field.
      * @param width The width of the field.
      */
@@ -36,6 +36,7 @@ public class Field
      * Place an animal at the given location.
      * If there is already an animal at the location it will
      * be lost.
+     * 
      * @param anAnimal The animal to be placed.
      * @param location Where to place the animal.
      */
@@ -58,6 +59,7 @@ public class Field
      * Place a plant at the given location.
      * If there is already an plant at the location it will
      * be lost.
+     * 
      * @param plant The Plant to be placed.
      * @param location Where to place the plant.
      */
@@ -77,6 +79,7 @@ public class Field
     
     /**
      * Return the animal at the given location, if any.
+     * 
      * @param location Where in the field.
      * @return The animal at the given location, or null if there is none.
      */
@@ -94,6 +97,7 @@ public class Field
     
     /**
      * Return the plant at the given location, if any.
+     * 
      * @param location Where in the field.
      * @return The plant at the given location, or null if there is none.
      */
@@ -111,6 +115,7 @@ public class Field
 
     /**
      * Get a shuffled list of the free adjacent locations.
+     * 
      * @param location Get locations adjacent to this.
      * @return A list of free adjacent locations.
      */
@@ -120,23 +125,24 @@ public class Field
         List<Location> adjacent = getAdjacentLocations(location);
         for(Location next : adjacent) {
             Organism organism = field.get(next);
-            if(organism instanceof Animal){
-            Animal anAnimal = (Animal)organism;
-            if(anAnimal == null) {
-                free.add(next);
+            if(organism instanceof Animal) {
+                Animal anAnimal = (Animal) organism;
+                if(anAnimal == null) {
+                    free.add(next);
+                }
+                else if(!anAnimal.isAlive()) {
+                    free.add(next);
+                }
             }
-            else if(!anAnimal.isAlive()) {
-                free.add(next);
+            else {
+                Plant plant = (Plant) organism;
+                if(plant == null) {
+                    free.add(next);
+                }
+                else if(!plant.isAlive()) {
+                    free.add(next);
+                }
             }
-          }else{
-            Plant plant = (Plant)organism;
-            if(plant == null) {
-                free.add(next);
-            }
-            else if(!plant.isAlive()) {
-                free.add(next);
-            }
-          }
         }
         return free;
     }
@@ -145,6 +151,7 @@ public class Field
      * Return a shuffled list of locations adjacent to the given one.
      * The list will not include the location itself.
      * All locations will lie within the grid.
+     * 
      * @param location The location from which to generate adjacencies.
      * @return A list of locations adjacent to that given.
      */
@@ -176,58 +183,53 @@ public class Field
     }
 
     /**
-     * Print out the number of foxes, rabbits, deers and bears in the field.
+     * Print out the number of all the organisms in the field.
      */
     public void fieldStats()
     {
         int numSwordFish = 0, numTurtle = 0, numParrotfish = 0, numWhiteSharks = 0, numKillerWhales = 0, numClownfish = 0, numAlgae = 0;
         for(Organism organism : field.values()) {
-            
-            if(organism instanceof Animal){
+            if(organism instanceof Animal) {
                 Animal anAnimal = (Animal)organism;
-            
-            
-            if(anAnimal instanceof Turtle) {
-                if(anAnimal.isAlive()) {
-                    numTurtle++;
+                if(anAnimal instanceof Turtle) {
+                    if(anAnimal.isAlive()) {
+                        numTurtle++;
+                    }   
+                }
+                else if(anAnimal instanceof Swordfish) {
+                    if(anAnimal.isAlive()) {
+                         numSwordFish++;
+                    }
+                }
+                else if(anAnimal instanceof Parrotfish) {
+                    if(anAnimal.isAlive()) {
+                        numParrotfish++;
+                    }
+                }
+                else if(anAnimal instanceof WhiteShark) {
+                    if(anAnimal.isAlive()) {
+                        numWhiteSharks++;
+                    }
+                }
+                else if(anAnimal instanceof Clownfish) {
+                    if(anAnimal.isAlive()) {
+                        numClownfish++;
+                    }
+                }
+                else if(anAnimal instanceof KillerWhale) {
+                    if(anAnimal.isAlive()) {
+                        numKillerWhales++;
+                    }
+                }
+                }
+            else if(organism instanceof Plant){
+                Plant plant = (Plant)organism;
+                if(plant instanceof Algae) {
+                    if(plant.isAlive()) {
+                        numAlgae++;
+                    }
                 }
             }
-            else if(anAnimal instanceof Swordfish) {
-                if(anAnimal.isAlive()) {
-                     numSwordFish++;
-                }
-            }
-            else if(anAnimal instanceof Parrotfish) {
-                if(anAnimal.isAlive()) {
-                    numParrotfish++;
-                }
-            }
-            else if(anAnimal instanceof WhiteShark) {
-                if(anAnimal.isAlive()) {
-                    numWhiteSharks++;
-                }
-            }
-            else if(anAnimal instanceof Clownfish) {
-                if(anAnimal.isAlive()) {
-                    numClownfish++;
-                }
-            }
-            else if(anAnimal instanceof KillerWhale) {
-                if(anAnimal.isAlive()) {
-                    numKillerWhales++;
-                }
-            }
-        }
-        else if(organism instanceof Plant){
-            Plant plant = (Plant)organism;
-            
-            if(plant instanceof Algae) {
-                if(plant.isAlive()) {
-                    numAlgae++;
-                }
-            }
-            
-        }
         }
         System.out.println("Turtle: " + numTurtle +
                            " White shark: " + numWhiteSharks +
@@ -247,12 +249,13 @@ public class Field
     }
 
     /**
-     * Return whether there is at least one rabbit and one fox in the field.
-     * @return true if there is at least one rabbit and one fox in the field.
+     * Return whether there is at least one organism in the field.
+     * 
+     * @return true If there is at least one organism in the field.
      */
     public boolean isViable()
     {
-        boolean rabbitfishFound = false;
+        boolean turtleFound = false;
         boolean swordfishFound = false;
         boolean parrotfishFound = false;
         boolean whiteSharkFound = false;
@@ -261,11 +264,11 @@ public class Field
         boolean algaeFound = false;
         
         Iterator<Animal> itA = animals.iterator();
-        while(itA.hasNext() && ! (rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound)) {
+        while(itA.hasNext() && ! (turtleFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound)) {
             Animal anAnimal = itA.next();
             if(anAnimal instanceof Turtle) {
                 if(anAnimal.isAlive()) {
-                    rabbitfishFound = true;
+                    turtleFound = true;
                 }
             }
             else if(anAnimal instanceof Swordfish) {
@@ -304,7 +307,7 @@ public class Field
                 }
             }
         }
-        return rabbitfishFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound && algaeFound;
+        return turtleFound && swordfishFound && parrotfishFound && whiteSharkFound && clownfishFound && killerWhaleFound && algaeFound;
     }
     
     /**
@@ -325,6 +328,7 @@ public class Field
 
     /**
      * Return the depth of the field.
+     * 
      * @return The depth of the field.
      */
     public int getDepth()
@@ -334,6 +338,7 @@ public class Field
     
     /**
      * Return the width of the field.
+     * 
      * @return The width of the field.
      */
     public int getWidth()

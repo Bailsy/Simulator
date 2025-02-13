@@ -3,38 +3,37 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * A simple model of a fox.
- * WhiteSharks age, move, eat rabbits or deers, and die.
+ * The algae class represents a plant organism in the simulation.
+ * Algae reproduce and serve as a food source for herbivorous species.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 7.1
+ * @author Nicolás Alcalá Olea and Bailey Crossan
  */
 public class Algae extends Plant
 {
-    // Characteristics shared by all foxes (class variables).
-    // The age at which a fox can start to breed.
-    private static final int BREEDING_AGE = 1;
-    // The age to which a fox can live.
+    // Characteristics shared by all algae (class variables).
+
+    // The stage at which an algae can start to reproduce.
+    private static final int GROWTH_AGE = 1;
+    // The age to which an algae can last.
     private static final int MAX_AGE = 10;
-    // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.9;
-    // The maximum number of births.
+    // The likelihood of an algae reproducing.
+    private static final double GROWTH_PROBABILITY = 0.9;
+    // The maximum number of algae fragments that an algae can drop.
     private static final int MAX_LITTER_SIZE = 7;
 
-    // A shared random number generator to control breeding.
+    // A shared random number generator to control reproduction.
     private static final Random rand = Randomizer.getRandom();
-    
+
     // Individual characteristics (instance fields).
 
-    // The fox's age.
+    // The algae's age.
     private int age;
 
-
     /**
-     * Create a white shark. A white shark can be created as a new born (age zero)
-     * and not hungry) or with a random age and food level.
+     * Create an algae. An algae can be created as a new plant (age zero)
+     * or with a random age.
      * 
-     * @param randomAge If true, the white shark will have random age and hunger level.
+     * @param randomAge If true, the algae will have random age.
      * @param location The location within the field.
      */
     public Algae(boolean randomAge, Location location)
@@ -47,11 +46,12 @@ public class Algae extends Plant
             age = 0;
         }
     }
-    
+
     /**
-     * This is what the white shark does most of the time: it hunts for
-     * rabbits or deers. In the process, it might breed, die of hunger,
-     * or die of old age.
+     * Defines the actions performed by the algae during one simulation
+     * step: they might reproduce and die of old age. They are active 
+     * during the whole day.
+     * 
      * @param currentField The field currently occupied.
      * @param nextFieldState The updated field.
      */
@@ -62,27 +62,18 @@ public class Algae extends Plant
             List<Location> freeLocations = 
                 nextFieldState.getFreeAdjacentLocations(getLocation());
             if(!freeLocations.isEmpty()) {
-                reproduce(nextFieldState);
+                grow(nextFieldState);
             }
-            // Try to move into a free location.
-            if(! freeLocations.isEmpty()) {
-                Location nextLocation = freeLocations.get(0);
-                setLocation(nextLocation);
-                nextFieldState.placePlant(this, nextLocation);
-            }
-
         }
     }
 
-
-
     @Override
     public String toString() {
-        return "White shark{" +
-                "age=" + age +
-                ", alive=" + isAlive() +
-                ", location=" + getLocation() +
-                '}';
+        return "Algae{" +
+        "age=" + age +
+        ", alive=" + isAlive() +
+        ", location=" + getLocation() +
+        '}';
     }
 
     /**
@@ -95,49 +86,50 @@ public class Algae extends Plant
             setDead();
         }
     }
-    
-    
+
     /**
      * Look for rabbits and deers adjacent to the current location.
      * Only the first live rabbit or deer is eaten.
+     * 
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
      */
-    
-    public void reproduce(Field nextFieldState) {
-        
-            int births = breed();
-            List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
-            for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
-                Location loc = freeLocations.remove(0);
-                Algae algae = new Algae(false, loc);
-                nextFieldState.placePlant(algae, loc);
-            
+
+    public void grow(Field nextFieldState) {
+        int births = grow();
+        List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());
+        for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
+            Location loc = freeLocations.remove(0);
+            Algae algae = new Algae(false, loc);
+            nextFieldState.placePlant(algae, loc);
         }
-    }
-        
-    /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
-     */
-    private int breed()
-    {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
-        }
-        return births;
     }
 
     /**
-     * A white shark can breed if it has reached the breeding age.
+     * Generate a number representing the number of new algae,
+     * if it can grow.
+     * 
+     * @return The number of births (may be zero).
      */
-    private boolean canBreed()
+    private int grow()
     {
-        return age >= BREEDING_AGE;
+        int algae;
+        if(canGrow() && rand.nextDouble() <= GROWTH_PROBABILITY) {
+            algae = rand.nextInt(MAX_LITTER_SIZE) + 1;
+        }
+        else {
+            algae = 0;
+        }
+        return algae;
+    }
+
+    /**
+     * A plant can reproduce if it has reached the reproducing age.
+     * 
+     * @return true If they can start reproducing.
+     */
+    private boolean canGrow()
+    {
+        return age >= GROWTH_AGE;
     }
 }
