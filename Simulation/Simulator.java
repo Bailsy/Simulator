@@ -12,7 +12,7 @@ public class Simulator
 
     // The default width for the grid.
     private static final int DEFAULT_WIDTH = 120;
-    // The default depth of the grid.
+    // The default depth of the grid. .
     private static final int DEFAULT_DEPTH = 80;
 
     // The probability that a swordfish will be created in any given grid position.
