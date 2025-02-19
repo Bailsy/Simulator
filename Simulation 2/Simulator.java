@@ -47,7 +47,7 @@ public class Simulator
     private static Time time = new Time();
     
     // An instance of WeatherManager for the simulation to have a view of it.
-    private static WeatherManager weatherManager = new WeatherManager();
+    public static WeatherManager weatherManager = new WeatherManager();
 
     /**
      * Construct a simulation field with default size.
@@ -102,8 +102,8 @@ public class Simulator
 
     /**
      * Run the simulation from its current state for a single step.
-     * Iterate over the whole field updating the state of every organism
-     * and making the time pass.
+     * Iterate over the whole field updating the state of every organism,
+     * the weather and making the time pass.
      */
     public void simulateOneStep()
     {
@@ -214,14 +214,5 @@ public class Simulator
         catch(InterruptedException e) {
             // ignore
         }
-    }
-    
-    /**
-     * Return current weather.
-     * 
-     * @return The current weather.
-     */
-    public static WeatherManager getWeatherManager() {
-        return weatherManager;
     }
 }

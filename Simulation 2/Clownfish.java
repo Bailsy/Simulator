@@ -1,10 +1,13 @@
 import java.util.List;
 import java.util.Random;
 import java.util.Iterator;
+
 /**
  * A model of a clownfish they can breed, eat algae to survive, they also 
  * have a period in which they sleep and if the maximun age is reached or 
- * they dont eat what they are required they will die.
+ * they dont eat what they are required they will die. They will also likely
+ * die if the disease catches them, it can also be transmitted to their mate
+ * or baby.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
@@ -18,12 +21,12 @@ public class Clownfish extends Animal
     private static final int MAX_AGE = 40;
     // The likelihood of a clownfish breeding.
     private static final double BREEDING_PROBABILITY = 0.45;
-    // The likelihood of a parrotfish catching the disease.
+    // The likelihood of a clownfish catching the disease.
     private static final double INFECTION_PROBABILITY = 0.01;
-    // The likelihood of a parrotfish transmitting the disease.
+    // The likelihood of a clownfish transmitting the disease.
     private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final int MAX_LITTER_SIZE = 4;
     // The food value of a single algae. Basically, the steps
     // they can go before they have to eat again.
     private static final int ALGAE_FOOD_VALUE = 30;
@@ -58,7 +61,7 @@ public class Clownfish extends Animal
     }
 
     /**
-     * Defines the actions performed by the parrotfish during one simulation
+     * Defines the actions performed by the clownfish during one simulation
      * step: it looks for its source of food and in the process, it might 
      * give birth, die of hunger, die of the disease or die of old age. They
      * are active during the day time.
@@ -74,41 +77,49 @@ public class Clownfish extends Animal
                 nextFieldState.getFreeAdjacentLocations(getLocation());
             if(Time.isDay()) { // What they do if its day time.
                 incrementHunger();
-                
+
                 if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
                     setInfected();
-                 }
+                }
                 if(infected && rand.nextDouble() <= 0.1) {
                     setDead();
                 }
-                
+
                 if(! freeLocations.isEmpty()) {
                     giveBirth(nextFieldState);
                 }
                 // Move towards a source of food if found.
                 Location nextLocation = findFood(currentField);
-                if(nextLocation == null && ! freeLocations.isEmpty()) {
-                    // No food found - try to move to a free location.
-                    nextLocation = freeLocations.remove(0);
-                }
-                // See if it was possible to move.
-                if(nextLocation != null) {
-                    setLocation(nextLocation);
-                    nextFieldState.placeAnimal(this, nextLocation);
-                }
-                else {
-                    // Overcrowding.
-                    setDead();
+
+                double movingModifier = Simulator.weatherManager.getPreyMovingModifier();
+                if(rand.nextDouble() <= movingModifier){
+                    if(nextLocation == null && ! freeLocations.isEmpty()) {
+                        // No food found - try to move to a free location.
+                        nextLocation = freeLocations.remove(0);
+                    }
+                    // See if it was possible to move.
+                    if(nextLocation != null) {
+                        setLocation(nextLocation);
+                        nextFieldState.placeAnimal(this, nextLocation);
+                    }
+                    else {
+                        // Overcrowding.
+                        setDead();
+                    }
                 }
             }
             else {
-                nextFieldState.placeAnimal(this, getLocation()); // Sleep if its night time.
+                nextFieldState.placeAnimal(this, getLocation());// Sleep if its night time.
+                if(infected && rand.nextDouble() <= 0.1) {
+                    setDead();
+                }
             }
         }
     }
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return "Clownfish{" +
         "age=" + age +
         ", alive=" + isAlive() +
@@ -129,7 +140,7 @@ public class Clownfish extends Animal
     }
 
     /**
-     * Make this fox more hungry. This could result in the clownfish death.
+     * Make this clownfish more hungry. This could result in the clownfish death.
      */
     private void incrementHunger()
     {
@@ -151,8 +162,8 @@ public class Clownfish extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
-        
-        double feedingModifier = Simulator.getWeatherManager().getPreyFeedingModifier();
+
+        double feedingModifier = Simulator.weatherManager.getPreyFeedingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Plant plant = field.getPlantAt(loc);
@@ -169,11 +180,14 @@ public class Clownfish extends Animal
 
     /**
      * Give birth to a new clownfish that spawns if there are free locations
-     * around their parent.
+     * around their parent. When mating if one of the parents has the disease
+     * there is a chance that it transmitts the disease to the other mate. And
+     * if both have the disease, their baby will also have the disease.
      * 
      * @param nextFieldState Where the new clownfish is going to be added.
      */
-    public void giveBirth(Field nextFieldState) {
+    public void giveBirth(Field nextFieldState) 
+    {
         Animal mate = findBreedingMate(nextFieldState);
         if (mate != null) {
             if (this.isInfected() && !mate.isInfected()) {

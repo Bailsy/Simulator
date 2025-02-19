@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.lang.Math;
+
 /**
  * A graphical view of the simulation grid.
  * The view displays a colored rectangle for each location 
@@ -10,7 +11,8 @@ import java.lang.Math;
  * color, representing the ocean, it becomes darker at
  * night time.
  * Colors for each type of species can be defined using the
- * setColor method.
+ * setColor method. If it becomes infected it will change to
+ * a white color.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
@@ -24,7 +26,9 @@ public class SimulatorView extends JFrame
 
     private final String STEP_PREFIX = "Step: ";
     private final String POPULATION_PREFIX = "Population: ";
+    private final String WEATHER_PREFIX = "Weather: ";
     private final JLabel stepLabel;
+    private final JLabel weatherLabel;
     private final JLabel population;
     private final FieldView fieldView;
 
@@ -53,15 +57,25 @@ public class SimulatorView extends JFrame
         setColor(Algae.class, new Color(0, 153, 0));
 
         setTitle("Underwater Simulation");
-        stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
+        
+        JPanel northPanel = new JPanel(new BorderLayout());
+        
+        stepLabel = new JLabel(STEP_PREFIX);
+        weatherLabel = new JLabel(WEATHER_PREFIX);
+        
+        stepLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        weatherLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        
+        northPanel.add(stepLabel, BorderLayout.WEST);
+        northPanel.add(weatherLabel, BorderLayout.EAST);
 
         setLocation(100, 50);
 
         fieldView = new FieldView(height, width);
-
+ 
         Container contents = getContentPane();
-        contents.add(stepLabel, BorderLayout.NORTH);
+        contents.add(northPanel, BorderLayout.NORTH);
         contents.add(fieldView, BorderLayout.CENTER);
         contents.add(population, BorderLayout.SOUTH);
         pack();
@@ -107,6 +121,7 @@ public class SimulatorView extends JFrame
         } 
 
         stepLabel.setText(STEP_PREFIX + step);
+        weatherLabel.setText(WEATHER_PREFIX + Simulator.weatherManager.getCurrentWeather());
         stats.reset();
         fieldView.preparePaint();
 

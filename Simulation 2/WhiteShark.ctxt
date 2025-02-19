@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=WhiteShark
-comment0.text=\n\ A\ model\ of\ a\ white\ shark\ they\ can\ breed,\ eat\ preys\ to\ survive\ and\ if\ \n\ their\ maximun\ age\ is\ reached\ or\ they\ dont\ eat\ what\ they\ are\ required\ \n\ they\ will\ die.\n\ \n\ @author\ Nicol\u00E1s\ Alcal\u00E1\ Olea\ and\ Bailey\ Crossan\n
+comment0.text=\n\ A\ model\ of\ a\ white\ shark\ they\ can\ breed,\ eat\ preys\ to\ survive\ and\ if\ \n\ their\ maximun\ age\ is\ reached\ or\ they\ dont\ eat\ what\ they\ are\ required\ \n\ they\ will\ die.\ They\ will\ also\ likely\ die\ if\ the\ disease\ catches\ them,\ \n\ it\ can\ also\ be\ transmitted\ to\ their\ mate\ or\ baby.\n\ \n\ @author\ Nicol\u00E1s\ Alcal\u00E1\ Olea\ and\ Bailey\ Crossan\n
 comment1.params=randomAge\ location
 comment1.target=WhiteShark(boolean,\ Location)
 comment1.text=\n\ Create\ a\ white\ shark.\ A\ white\ shark\ can\ be\ created\ as\ a\ new\ born\ (age\ zero\n\ and\ not\ hungry)\ or\ with\ a\ random\ age\ and\ food\ level.\n\ \n\ @param\ randomAge\ If\ true,\ the\ white\ shark\ will\ have\ random\ age\ and\ hunger\ level.\n\ @param\ location\ The\ location\ within\ the\ field.\n
@@ -17,10 +17,10 @@ comment5.target=void\ incrementHunger()
 comment5.text=\n\ Make\ this\ white\ shark\ more\ hungry.\ This\ could\ result\ in\ the\ white\ shark's\ death.\n
 comment6.params=field
 comment6.target=Location\ findFood(Field)
-comment6.text=\n\ Look\ for\ preys\ adjacent\ to\ the\ current\ location.\n\ Only\ the\ first\ prey\ is\ eaten.\n\ \n\ @param\ field\ The\ field\ currently\ occupied.\n\ @return\ Where\ food\ was\ found,\ or\ null\ if\ it\ wasn't.\n
+comment6.text=\n\ Look\ for\ preys\ adjacent\ to\ the\ current\ location.\n\ Only\ the\ first\ prey\ is\ eaten.\n\ Weather\ could\ alter\ this\ behaviour.\n\ \n\ @param\ field\ The\ field\ currently\ occupied.\n\ @return\ Where\ food\ was\ found,\ or\ null\ if\ it\ wasn't.\n
 comment7.params=nextFieldState
 comment7.target=void\ giveBirth(Field)
-comment7.text=\n\ Give\ birth\ to\ a\ new\ white\ shark\ that\ spawns\ if\ there\ are\ free\ locations\n\ around\ their\ parent.\n\ \n\ @param\ nextFieldState\ Where\ the\ new\ white\ shark\ is\ going\ to\ be\ added.\n
+comment7.text=\n\ Give\ birth\ to\ a\ new\ white\ shark\ that\ spawns\ if\ there\ are\ free\ locations\n\ around\ their\ parent.\ When\ mating\ if\ one\ of\ the\ parents\ has\ the\ disease\n\ there\ is\ a\ chance\ that\ it\ transmitts\ the\ disease\ to\ the\ other\ mate.\ And\n\ if\ both\ have\ the\ disease,\ their\ baby\ will\ also\ have\ the\ disease.\n\ \n\ @param\ nextFieldState\ Where\ the\ new\ white\ shark\ is\ going\ to\ be\ added.\n
 comment8.params=
 comment8.target=int\ breed()
 comment8.text=\n\ Generate\ a\ number\ representing\ the\ number\ of\ births,\n\ if\ it\ can\ breed.\n\ \n\ @return\ The\ number\ of\ births\ (may\ be\ zero).\n

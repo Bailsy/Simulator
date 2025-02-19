@@ -37,7 +37,6 @@ public class FieldStats
         if(!countsValid) {
             generatePlantCounts(field);
             generateAnimalCounts(field);
-
         }
         for(Class<?> key : counters.keySet()) {
             Counter info = counters.get(key);

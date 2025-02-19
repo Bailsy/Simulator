@@ -5,7 +5,9 @@ import java.util.Iterator;
 /**
  * A model of a parrotfish they can breed, eat algae to survive, they also 
  * have a period in which they sleep and if the maximun age is reached or 
- * they dont eat what they are required they will die.
+ * they dont eat what they are required they will die. They will also likely
+ * die if the disease catches them, it can also be transmitted to their mate
+ * or baby.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
@@ -24,7 +26,7 @@ public class Parrotfish extends Animal
     // The likelihood of a parrotfish transmitting the disease.
     private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final int MAX_LITTER_SIZE = 4;
     // The food value of a single algae. Basically, the steps
     // they can go before they have to eat again.
     private static final int ALGAE_FOOD_VALUE = 30;
@@ -75,41 +77,49 @@ public class Parrotfish extends Animal
                 nextFieldState.getFreeAdjacentLocations(getLocation());
             if(Time.isDay()) { // What they do if its day time.
                 incrementHunger();
-                
+
                 if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
                     setInfected();
-                 }
+                }
                 if(infected && rand.nextDouble() <= 0.1) {
                     setDead();
                 }
-                
+
                 if(! freeLocations.isEmpty()) {
                     giveBirth(nextFieldState);
                 }
                 // Move towards a source of food if found.
                 Location nextLocation = findFood(currentField);
-                if(nextLocation == null && ! freeLocations.isEmpty()) {
-                    // No food found - try to move to a free location.
-                    nextLocation = freeLocations.remove(0);
-                }
-                // See if it was possible to move.
-                if(nextLocation != null) {
-                    setLocation(nextLocation);
-                    nextFieldState.placeAnimal(this, nextLocation);
-                }
-                else {
-                    // Overcrowding.
-                    setDead();
+
+                double movingModifier = Simulator.weatherManager.getPreyMovingModifier();
+                if(rand.nextDouble() <= movingModifier){
+                    if(nextLocation == null && ! freeLocations.isEmpty()) {
+                        // No food found - try to move to a free location.
+                        nextLocation = freeLocations.remove(0);
+                    }
+                    // See if it was possible to move.
+                    if(nextLocation != null) {
+                        setLocation(nextLocation);
+                        nextFieldState.placeAnimal(this, nextLocation);
+                    }
+                    else {
+                        // Overcrowding.
+                        setDead();
+                    }
                 }
             }
             else {
-                nextFieldState.placeAnimal(this, getLocation()); // Sleep if its night time.
+                nextFieldState.placeAnimal(this, getLocation());// Sleep if its night time.
+                if(infected && rand.nextDouble() <= 0.1) {
+                    setDead();
+                }
             }
         }
     }
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return "Parrotfish{" +
         "age=" + age +
         ", alive=" + isAlive() +
@@ -130,7 +140,7 @@ public class Parrotfish extends Animal
     }
 
     /**
-     * Make this fox more hungry. This could result in the parrotfish death.
+     * Make this parrotfish more hungry. This could result in the parrotfish death.
      */
     private void incrementHunger()
     {
@@ -152,8 +162,8 @@ public class Parrotfish extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
-        
-        double feedingModifier = Simulator.getWeatherManager().getPreyFeedingModifier();
+
+        double feedingModifier = Simulator.weatherManager.getPreyFeedingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Plant plant = field.getPlantAt(loc);
@@ -170,11 +180,14 @@ public class Parrotfish extends Animal
 
     /**
      * Give birth to a new parrotfish that spawns if there are free locations
-     * around their parent.
+     * around their parent. When mating if one of the parents has the disease
+     * there is a chance that it transmitts the disease to the other mate. And
+     * if both have the disease, their baby will also have the disease.
      * 
      * @param nextFieldState Where the new parrotfish is going to be added.
      */
-    public void giveBirth(Field nextFieldState) {
+    public void giveBirth(Field nextFieldState) 
+    {
         Animal mate = findBreedingMate(nextFieldState);
         if (mate != null) {
             if (this.isInfected() && !mate.isInfected()) {

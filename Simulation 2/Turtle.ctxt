@@ -1,12 +1,12 @@
 #BlueJ class context
 comment0.target=Turtle
-comment0.text=\n\ A\ model\ of\ a\ turtle\ they\ can\ breed,\ eat\ algae\ to\ survive,\ they\ also\ \n\ have\ a\ period\ in\ which\ they\ sleep\ and\ if\ the\ maximun\ age\ is\ reached\ or\ \n\ they\ dont\ eat\ what\ they\ are\ required\ they\ will\ die.\n\ \n\ @author\ Nicol\u00E1s\ Alcal\u00E1\ Olea\ and\ Bailey\ Crossan\n
+comment0.text=\n\ A\ model\ of\ a\ turtle\ they\ can\ breed,\ eat\ algae\ to\ survive,\ they\ also\ \n\ have\ a\ period\ in\ which\ they\ sleep\ and\ if\ the\ maximun\ age\ is\ reached\ or\ \n\ they\ dont\ eat\ what\ they\ are\ required\ they\ will\ die.\ They\ will\ also\ likely\n\ die\ if\ the\ disease\ catches\ them,\ it\ can\ also\ be\ transmitted\ to\ their\ mate\n\ or\ baby.\n\ \n\ @author\ Nicol\u00E1s\ Alcal\u00E1\ Olea\ and\ Bailey\ Crossan\n
 comment1.params=randomAge\ location
 comment1.target=Turtle(boolean,\ Location)
 comment1.text=\n\ Create\ a\ turtle.\ A\ turtle\ can\ be\ created\ as\ a\ new\ born\ (age\ zero\n\ and\ not\ hungry)\ or\ with\ a\ random\ age\ and\ food\ level.\n\ \n\ @param\ randomAge\ If\ true,\ the\ turtle\ will\ have\ random\ age\ and\ hunger\ level.\n\ @param\ location\ The\ location\ within\ the\ field.\n
 comment2.params=currentField\ nextFieldState
 comment2.target=void\ act(Field,\ Field)
-comment2.text=\n\ Defines\ the\ actions\ performed\ by\ the\ parrotfish\ during\ one\ simulation\n\ step\:\ it\ looks\ for\ its\ source\ of\ food\ and\ in\ the\ process,\ it\ might\ \n\ give\ birth,\ die\ of\ hunger,\ die\ of\ the\ disease\ or\ die\ of\ old\ age.\ They\n\ are\ active\ during\ the\ day\ time.\n\ \n\ @param\ currentField\ The\ field\ currently\ occupied.\n\ @param\ nextFieldState\ The\ updated\ field.\n
+comment2.text=\n\ Defines\ the\ actions\ performed\ by\ the\ turtle\ during\ one\ simulation\n\ step\:\ it\ looks\ for\ its\ source\ of\ food\ and\ in\ the\ process,\ it\ might\ \n\ give\ birth,\ die\ of\ hunger,\ die\ of\ the\ disease\ or\ die\ of\ old\ age.\ They\n\ are\ active\ during\ the\ day\ time.\n\ \n\ @param\ currentField\ The\ field\ currently\ occupied.\n\ @param\ nextFieldState\ The\ updated\ field.\n
 comment3.params=
 comment3.target=java.lang.String\ toString()
 comment4.params=
@@ -17,10 +17,10 @@ comment5.target=void\ incrementHunger()
 comment5.text=\n\ Make\ this\ turtle\ more\ hungry.\ This\ could\ result\ in\ the\ turtles's\ death.\n
 comment6.params=field
 comment6.target=Location\ findFood(Field)
-comment6.text=\n\ Look\ for\ algae\ adjacent\ to\ the\ current\ location.\n\ Only\ the\ first\ algae\ is\ eaten.\n\ \n\ @param\ field\ The\ field\ currently\ occupied.\n\ @return\ Where\ food\ was\ found,\ or\ null\ if\ it\ wasn't.\n
+comment6.text=\n\ Look\ for\ algae\ adjacent\ to\ the\ current\ location.\n\ Only\ the\ first\ algae\ is\ eaten.\n\ Weather\ could\ alter\ this\ behaviour.\n\ \n\ @param\ field\ The\ field\ currently\ occupied.\n\ @return\ Where\ food\ was\ found,\ or\ null\ if\ it\ wasn't.\n
 comment7.params=nextFieldState
 comment7.target=void\ giveBirth(Field)
-comment7.text=\n\ Give\ birth\ to\ a\ new\ turtle\ that\ spawns\ in\ the\ first\ free\ \n\ location\ around\ their\ parent.\n\ \n\ @param\ nextFieldState\ Where\ the\ new\ turtle\ is\ going\ to\ be\ added.\n
+comment7.text=\n\ Give\ birth\ to\ a\ new\ turtle\ that\ spawns\ in\ the\ first\ free\ \n\ location\ around\ their\ parent.\ When\ mating\ if\ one\ of\ the\ parents\ has\ the\ disease\n\ there\ is\ a\ chance\ that\ it\ transmitts\ the\ disease\ to\ the\ other\ mate.\ And\n\ if\ both\ have\ the\ disease,\ their\ baby\ will\ also\ have\ the\ disease.\n\ \n\ @param\ nextFieldState\ Where\ the\ new\ turtle\ is\ going\ to\ be\ added.\n
 comment8.params=
 comment8.target=int\ breed()
 comment8.text=\n\ Generate\ a\ number\ representing\ the\ number\ of\ births,\n\ if\ it\ can\ breed.\n\ \n\ @return\ The\ number\ of\ births\ (may\ be\ zero).\n

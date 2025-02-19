@@ -5,7 +5,9 @@ import java.util.Iterator;
 /**
  * A model of a turtle they can breed, eat algae to survive, they also 
  * have a period in which they sleep and if the maximun age is reached or 
- * they dont eat what they are required they will die.
+ * they dont eat what they are required they will die. They will also likely
+ * die if the disease catches them, it can also be transmitted to their mate
+ * or baby.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
@@ -18,13 +20,13 @@ public class Turtle extends Animal
     // The age to which a turtle can live.
     private static final int MAX_AGE = 50;
     // The likelihood of a turtle breeding.
-    private static final double BREEDING_PROBABILITY = 0.3;
-    // The likelihood of a parrotfish catching the disease.
+    private static final double BREEDING_PROBABILITY = 0.35;
+    // The likelihood of a turtlr catching the disease.
     private static final double INFECTION_PROBABILITY = 0.01;
-    // The likelihood of a parrotfish transmitting the disease.
+    // The likelihood of a turtle transmitting the disease.
     private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final int MAX_LITTER_SIZE = 4;
     // The food value of an algae. Basically, the steps
     // they can go before they have to eat again.
     private static final int ALGAE_FOOD_VALUE = 30;
@@ -59,7 +61,7 @@ public class Turtle extends Animal
     }
 
     /**
-     * Defines the actions performed by the parrotfish during one simulation
+     * Defines the actions performed by the turtle during one simulation
      * step: it looks for its source of food and in the process, it might 
      * give birth, die of hunger, die of the disease or die of old age. They
      * are active during the day time.
@@ -75,41 +77,49 @@ public class Turtle extends Animal
                 nextFieldState.getFreeAdjacentLocations(getLocation());
             if(Time.isDay()) { // What they do if its day time.
                 incrementHunger();
-                
+
                 if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
                     setInfected();
-                 }
+                }
                 if(infected && rand.nextDouble() <= 0.1) {
                     setDead();
                 }
-                
+
                 if(! freeLocations.isEmpty()) {
                     giveBirth(nextFieldState);
                 }
                 // Move towards a source of food if found.
                 Location nextLocation = findFood(currentField);
-                if(nextLocation == null && ! freeLocations.isEmpty()) {
-                    // No food found - try to move to a free location.
-                    nextLocation = freeLocations.remove(0);
-                }
-                // See if it was possible to move.
-                if(nextLocation != null) {
-                    setLocation(nextLocation);
-                    nextFieldState.placeAnimal(this, nextLocation);
-                }
-                else {
-                    // Overcrowding.
-                    setDead();
+
+                double movingModifier = Simulator.weatherManager.getPreyMovingModifier();
+                if(rand.nextDouble() <= movingModifier){
+                    if(nextLocation == null && ! freeLocations.isEmpty()) {
+                        // No food found - try to move to a free location.
+                        nextLocation = freeLocations.remove(0);
+                    }
+                    // See if it was possible to move.
+                    if(nextLocation != null) {
+                        setLocation(nextLocation);
+                        nextFieldState.placeAnimal(this, nextLocation);
+                    }
+                    else {
+                        // Overcrowding.
+                        setDead();
+                    }
                 }
             }
             else {
-                nextFieldState.placeAnimal(this, getLocation()); // Sleep if its night time.
+                nextFieldState.placeAnimal(this, getLocation());// Sleep if its night time.
+                if(infected && rand.nextDouble() <= 0.1) {
+                    setDead();
+                }
             }
         }
     }
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return "Turtle{" +
         "age=" + age +
         ", alive=" + isAlive() +
@@ -143,6 +153,7 @@ public class Turtle extends Animal
     /**
      * Look for algae adjacent to the current location.
      * Only the first algae is eaten.
+     * Weather could alter this behaviour.
      * 
      * @param field The field currently occupied.
      * @return Where food was found, or null if it wasn't.
@@ -152,8 +163,8 @@ public class Turtle extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
-        
-        double feedingModifier = Simulator.getWeatherManager().getPreyFeedingModifier();
+
+        double feedingModifier = Simulator.weatherManager.getPreyFeedingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Plant plant = field.getPlantAt(loc);
@@ -170,11 +181,14 @@ public class Turtle extends Animal
 
     /**
      * Give birth to a new turtle that spawns in the first free 
-     * location around their parent.
+     * location around their parent. When mating if one of the parents has the disease
+     * there is a chance that it transmitts the disease to the other mate. And
+     * if both have the disease, their baby will also have the disease.
      * 
      * @param nextFieldState Where the new turtle is going to be added.
      */
-    public void giveBirth(Field nextFieldState) {
+    public void giveBirth(Field nextFieldState) 
+    {
         Animal mate = findBreedingMate(nextFieldState);
         if (mate != null) {
             if (this.isInfected() && !mate.isInfected()) {

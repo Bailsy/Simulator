@@ -91,7 +91,8 @@ public abstract class Animal implements Organism
      * 
      * @return true If the animal is male, false if its a female.
      */
-    public boolean getIsMale() {
+    public boolean getIsMale() 
+    {
         return isMale;
     }
     
@@ -102,7 +103,8 @@ public abstract class Animal implements Organism
      * @param mate The animal who its going to breed with.
      * @return true If all the premises are met.
      */
-    protected boolean canBreedWith(Animal mate) {
+    protected boolean canBreedWith(Animal mate) 
+    {
         return mate != null && this.getClass().equals(mate.getClass()) && this.getIsMale() != mate.getIsMale();
     }
     
@@ -113,7 +115,8 @@ public abstract class Animal implements Organism
      * @param field The field where the animal is currently at
      * @return A valid mate to breed with.
      */
-    public Animal findBreedingMate(Field field) {
+    public Animal findBreedingMate(Field field) 
+    {
         List<Location> adjacentFields = field.getAdjacentLocations(getLocation());
         for (Location loc : adjacentFields) {
             Animal animal = field.getAnimalAt(loc);
@@ -137,7 +140,8 @@ public abstract class Animal implements Organism
     /**
      * Infects the animal with the disease.
      */
-    public void setInfected(){
+    public void setInfected()
+    {
         infected = true;
     }
     
@@ -146,7 +150,8 @@ public abstract class Animal implements Organism
      * 
      * @return true If the animal is infected, false otherwise.
      */
-    public boolean isInfected(){
+    public boolean isInfected()
+    {
         return infected;
     }
 }

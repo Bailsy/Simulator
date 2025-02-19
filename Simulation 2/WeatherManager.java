@@ -16,7 +16,8 @@ public class WeatherManager {
      * Weather manager constructor, where we make the simulation start
      * with a clear weather and give it a random time duration.
      */
-    public WeatherManager() {
+    public WeatherManager() 
+    {
         random = new Random();
         currentWeather = Weather.CLEAR;
         timeRemaining = randomDuration();
@@ -26,7 +27,8 @@ public class WeatherManager {
      * Updates the time remaining counter until it reaches 0, then
      * it will change the weather.
      */
-    public void update(double oneStep) {
+    public void update(double oneStep) 
+    {
         timeRemaining -= oneStep;
         if (timeRemaining <= 0) {
             changeWeather();
@@ -36,7 +38,8 @@ public class WeatherManager {
     /**
      * Pick randomly one of the different weather phenomenons.
      */
-    private void changeWeather() {
+    private void changeWeather() 
+    {
         Weather[] types = Weather.values();
         currentWeather = types[random.nextInt(types.length)];
         timeRemaining = randomDuration();
@@ -48,7 +51,8 @@ public class WeatherManager {
      * 
      * @return A random integer starting from 20 up to 40.
      */
-    private double randomDuration() {
+    private double randomDuration() 
+    {
         return 20 + random.nextInt(21);
     }
     
@@ -57,25 +61,38 @@ public class WeatherManager {
      * 
      * @return The current weather.
      */
-    public Weather getCurrentWeather() {
+    public Weather getCurrentWeather() 
+    {
         return currentWeather;
     }
 
     /**
      * Check if the weather is foggy if so make the predators have
-     * less of a chance to catch fish, if it is cold make them less
-     * likely to move.
+     * less of a chance to catch fish.
      * 
      * @return The predator efficiency when acting depending on the weather.
      */
-    public double getPredatorHuntingModifier() {
+    public double getPredatorHuntingModifier() 
+    {
         switch (currentWeather) {
             case Weather.FOG:
-                System.out.println("dmowaid");
                 return 0.7;
                 
+            default: return 1;
+        }
+    }
+    
+    /**
+     * Check if the weather is cold if so make the predators have
+     * less of a chance to move.
+     * 
+     * @return The predator efficiency when acting depending on the weather.
+     */
+    public double getPredatorMovingModifier() 
+    {
+        switch (currentWeather) {  
             case Weather.COLD:
-                return 0.8;
+                return 0.7;
                 
             default: return 1;
         }
@@ -83,17 +100,29 @@ public class WeatherManager {
     
     /**
      * Check if the weather is foggy if so make the prey have
-     * less of a chance to feed on the algae, if it is cold make
-     * them less likely to move.
+     * less of a chance to feed on the algae.
      * 
      * @return The prey efficiency when acting depending on the weather.
      */
-    public double getPreyFeedingModifier() {
+    public double getPreyFeedingModifier() 
+    {
         switch (currentWeather) {
             case Weather.FOG:
-                System.out.println("dmowaid");
                 return 0.7;
                 
+            default: return 1;
+        }
+    }
+    
+    /**
+     * Check if the weather is cold if so make the prey have
+     * less of a chance to move.
+     * 
+     * @return The prey efficiency when acting depending on the weather.
+     */
+    public double getPreyMovingModifier() 
+    {
+        switch (currentWeather) {
             case Weather.COLD:
                 return 0.6;
                 
@@ -111,7 +140,6 @@ public class WeatherManager {
     public double getPlantGrowthModifier() {
         switch (currentWeather) {
             case Weather.FOG:
-                System.out.println("dmowaid");
                 return 0.6;
                 
             case Weather.COLD:

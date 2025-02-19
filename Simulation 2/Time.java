@@ -6,10 +6,10 @@
  */
 public class Time
 {
-    // The time in which day time ends. (19PM)
-    private static final int DAY_TIME = 19;
-    // The time in which night time ends. (6AM)
-    private static final int NIGHT_TIME = 6;
+    // The time in which day time ends. (20PM)
+    private static final int DAY_TIME = 20;
+    // The time in which night time ends. (5AM)
+    private static final int NIGHT_TIME = 5;
     
     private static int hour;
     private static int minute;

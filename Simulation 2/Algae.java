@@ -96,7 +96,7 @@ public class Algae extends Plant
      */
 
     public void grow(Field nextFieldState) {
-        double growthModifier = Simulator.getWeatherManager().getPlantGrowthModifier();
+        double growthModifier = Simulator.weatherManager.getPlantGrowthModifier();
         
         int algaes = (int) (grow() * growthModifier);
         List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(this.getLocation());

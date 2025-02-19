@@ -5,7 +5,8 @@ import java.util.Random;
 /**
  * A model of a swordfish they can breed, eat preys to survive and if 
  * their maximun age is reached or they dont eat what they are required 
- * they will die.
+ * they will die. They will also likely die if the disease catches them, 
+ * it can also be transmitted to their mate or baby.
  * 
  * @author Nicolás Alcalá Olea and Bailey Crossan
  */
@@ -19,9 +20,9 @@ public class Swordfish extends Animal
     private static final int MAX_AGE = 500;
     // The likelihood of a swordfish breeding.
     private static final double BREEDING_PROBABILITY = 0.15;
-    // The likelihood of a parrotfish catching the disease.
+    // The likelihood of a swordfish catching the disease.
     private static final double INFECTION_PROBABILITY = 0.01;
-    // The likelihood of a parrotfish transmitting the disease.
+    // The likelihood of a swordfish transmitting the disease.
     private static final double TRANSMISSION_PROBABILITY = 0.02;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
@@ -75,37 +76,42 @@ public class Swordfish extends Animal
         if(isAlive()) {
             List<Location> freeLocations =
                 nextFieldState.getFreeAdjacentLocations(getLocation());
-
+            
             if(!infected && rand.nextDouble() <= INFECTION_PROBABILITY) {
                 setInfected();
             }
-            if(infected && rand.nextDouble() <= 0.1) {
+            if(infected && rand.nextDouble() <= 0.05) {
                 setDead();
             }
-
+            
             if(! freeLocations.isEmpty()) {
                 giveBirth(nextFieldState);
             }
             // Move towards a source of food if found.
             Location nextLocation = findFood(currentField);
-            if(nextLocation == null && ! freeLocations.isEmpty()) {
-                // No food found - try to move to a free location.
-                nextLocation = freeLocations.remove(0);
-            }
-            // See if it was possible to move.
-            if(nextLocation != null) {
-                setLocation(nextLocation);
-                nextFieldState.placeAnimal(this, nextLocation);
-            }
-            else {
-                // Overcrowding.
-                setDead();
+            
+            double movingModifier = Simulator.weatherManager.getPredatorMovingModifier();
+            if(rand.nextDouble() <= movingModifier){
+                if(nextLocation == null && ! freeLocations.isEmpty()) {
+                    // No food found - try to move to a free location.
+                    nextLocation = freeLocations.remove(0);
+                }
+                // See if it was possible to move.
+                if(nextLocation != null) {
+                    setLocation(nextLocation);
+                    nextFieldState.placeAnimal(this, nextLocation);
+                }
+                else {
+                    // Overcrowding.
+                    setDead();
+                }
             }
         }
     }
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return "Swordfish{" +
         "age=" + age +
         ", alive=" + isAlive() +
@@ -148,8 +154,8 @@ public class Swordfish extends Animal
         List<Location> adjacent = field.getAdjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
         Location foodLocation = null;
-        
-        double huntingModifier = Simulator.getWeatherManager().getPredatorHuntingModifier();
+
+        double huntingModifier = Simulator.weatherManager.getPredatorHuntingModifier();
         while(foodLocation == null && it.hasNext()) {
             Location loc = it.next();
             Animal animal = field.getAnimalAt(loc);
@@ -173,11 +179,14 @@ public class Swordfish extends Animal
 
     /**
      * Give birth to a new swordfish that spawns if there are free locations
-     * around their parent.
+     * around their parent. When mating if one of the parents has the disease
+     * there is a chance that it transmitts the disease to the other mate. And
+     * if both have the disease, their baby will also have the disease.
      * 
      * @param nextFieldState Where the new swordfish is going to be added.
      */
-    public void giveBirth(Field nextFieldState) {
+    public void giveBirth(Field nextFieldState) 
+    {
         Animal mate = findBreedingMate(nextFieldState);
         if (mate != null) {
             if (this.isInfected() && !mate.isInfected()) {
